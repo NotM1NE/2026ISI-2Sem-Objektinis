@@ -47,32 +47,49 @@ void outputas(vector<Studentas> grupe)
 
 void inputas(vector<Studentas>& grupe)
 {
-    for (int ii = 0; ii < 2; ii++)
+    Studentas A;
+    while(true)
     {
-        Studentas A;
+        cout << "Iveskite 0, kad baigti ivedinet duomenis" << endl;
         cout << "Iveskite varda ir pavarde: ";
-        cin >> A.vardas >> A.pavarde;
-        cout << "Iveskite semestro ivercius. Kiek ju bus? ";
-        int n, sum = 0;
-        cin >> n;
-        A.paz.reserve(n);
-        for (int i = 0; i < n; i++)
+        cin >> A.vardas;
+        if(A.vardas == "0")
+            break;
+        cin >> A.pavarde;
+        cout << "Iveskite semestro ivercius. Kai baigsite iveskite 0" << endl;
+        int sum = 0;
+        int temp = -1;
+        int i = 1;
+        while(true)
         {
-            int temp;
-            cout << "Iveskite " << i + 1 << " pazymi: ";
+            cout << "Iveskite " << i << " pazymi: ";
             cin >> temp;
+            if(temp == 0)
+                break;
             A.paz.push_back(temp);
             sum += temp;
+            i++;
         }
         cout << "Iveskite egzamino invertinima: ";
         cin >> A.egz;
-        A.vid = sum * 1.0 / (n * 1.0) * 0.4 + A.egz * 0.6;
-        sort(A.paz.begin(), A.paz.end());
         int length = A.paz.size();
-        if (length % 2 == 0)
+        sort(A.paz.begin(), A.paz.end());
+        if(length == 0)
+        {
+            A.med = A.egz * 0.6;
+            A.vid = A.med;
+        }
+        else if (length % 2 == 0)
+        {
             A.med = (A.paz[length / 2 - 1] + A.paz[length / 2]) / 2.0 * 0.4 + A.egz * 0.6;
+            A.vid = sum * 1.0 / (length * 1.0) * 0.4 + A.egz * 0.6;
+        }
         else
+        {
             A.med = A.paz[length / 2] * 0.4 + A.egz * 0.6;
+            A.vid = sum * 1.0 / (length * 1.0) * 0.4 + A.egz * 0.6;
+        }
+
         grupe.push_back(A);
         A.paz.clear();
     }
