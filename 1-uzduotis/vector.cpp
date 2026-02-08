@@ -12,9 +12,11 @@ using std::left;
 using std::right;
 using std::setprecision;
 using std::setw;
+using std::srand;
+using std::sort;
 using std::string;
 using std::vector;
-using std::sort;
+
 
 struct Studentas
 {
@@ -47,6 +49,7 @@ void outputas(vector<Studentas> grupe)
 
 void inputas(vector<Studentas>& grupe)
 {
+    srand(time(NULL));
     Studentas A;
     while(true)
     {
@@ -57,21 +60,35 @@ void inputas(vector<Studentas>& grupe)
             break;
         cin >> A.pavarde;
         cout << "Iveskite semestro ivercius. Kai baigsite iveskite 0" << endl;
+        cout << "Jeigu pageidaujate, kad pazymiai butu atsitiktiniai, iveskite -1" << endl;
         int sum = 0;
-        int temp = -1;
+        int temp = -2;
         int i = 1;
         while(true)
         {
             cout << "Iveskite " << i << " pazymi: ";
             cin >> temp;
+            if(temp == -1)
+            {
+                temp = rand() % 10 + 1;
+                cout << "Sugeneruotas pazymys: " << temp << endl;
+            }
             if(temp == 0)
                 break;
             A.paz.push_back(temp);
             sum += temp;
             i++;
         }
+        cout << "Jeigu pageidaujate, kad egzamino rezultatas butu atsitiktiniai, iveskite -1" << endl;
         cout << "Iveskite egzamino invertinima: ";
-        cin >> A.egz;
+        cin >> temp;
+        if(temp == -1)
+        {
+            A.egz = rand() % 10 + 1;
+            cout << "Sugeneruotas pazymys: " << A.egz << endl;
+        }
+        else
+            A.egz = temp;
         int length = A.paz.size();
         sort(A.paz.begin(), A.paz.end());
         if(length == 0)

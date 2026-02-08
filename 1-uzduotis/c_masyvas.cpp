@@ -16,6 +16,7 @@ using std::sort;
 using std::string;
 using std::vector;
 
+
 const int N = 100; // maks paz ir studentu kiekis
 
 struct Studentas
@@ -48,6 +49,7 @@ void outputas(Studentas grupe[], int n)
 
 void inputas(Studentas grupe[], int &n)
 {
+    srand(time(NULL));
     n = 0;
     while (true)
     {
@@ -63,6 +65,7 @@ void inputas(Studentas grupe[], int &n)
             break;
         cin >> grupe[n].pavarde;
         cout << "Iveskite semestro ivercius. Kai baigsite iveskite 0" << endl;
+        cout << "Jeigu pageidaujate, kad pazymiai butu atsitiktiniai, iveskite -1" << endl;
         int sum = 0;
         int temp = -1;
         int i = 0;
@@ -75,14 +78,27 @@ void inputas(Studentas grupe[], int &n)
             }
             cout << "Iveskite " << i + 1 << " pazymi: ";
             cin >> temp;
+            if(temp == -1)
+            {
+                temp = rand() % 10 + 1;
+                cout << "Sugeneruotas pazymys: " << temp << endl;
+            }
             if (temp == 0)
                 break;
             grupe[n].C[i] = temp;
             sum += temp;
             i++;
         }
+        cout << "Jeigu pageidaujate, kad egzamino rezultatas butu atsitiktiniai, iveskite -1" << endl;
         cout << "Iveskite egzamino invertinima: ";
-        cin >> grupe[n].egz;
+        cin >> temp;
+        if(temp == -1)
+        {
+            grupe[n].egz = rand() % 10 + 1;
+            cout << "Sugeneruotas pazymys: " << grupe[n].egz << endl;
+        }
+        else
+            grupe[n].egz = temp;
         int length = i;
         sort(grupe[n].C, grupe[n].C + length);
         if (length == 0)
