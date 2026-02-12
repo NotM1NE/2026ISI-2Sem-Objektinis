@@ -12,11 +12,17 @@ using std::left;
 using std::right;
 using std::setprecision;
 using std::setw;
-using std::srand;
 using std::sort;
 using std::string;
 using std::vector;
 
+const vector<string> vyr_vardai = {"Jonas", "Mantas", "Tomas", "Lukas", "Karolis", "Darius", "Paulius", "Mindaugas", "Justas", "Rokas",};
+
+const vector<string> mot_vardai = {"Agne", "Ieva", "Egle", "Gabija", "Monika", "Karolina", "Viktorija", "Emilija", "Justina", "Greta"};
+
+const vector<string> vyr_pavardes = {"Kazlauskas", "Jankauskas", "Petrauskas", "Stankevicius", "Zukauskas", "Butkus", "Pocius", "Urbonas", "Mockus", "Savickas"};
+
+const vector<string> mot_pavardes = {"Kazlauskiene", "Jankauskiene", "Petrauskiene", "Stankeviciene", "Zukauskiene", "Butkienė", "Pociene", "Urboniene", "Mockiene", "Savickiene"};
 
 struct Studentas
 {
@@ -26,8 +32,11 @@ struct Studentas
     double vid, med;
 };
 
-void inputas(vector<Studentas>& grupe);
+void inputas(vector<Studentas> &grupe);
 void outputas(vector<Studentas> grupe);
+void MedVidSkaciavimas(Studentas &A, int sum);
+string randomPavarde(int n);
+string randomVardas(int n);
 
 int main()
 {
@@ -39,75 +48,152 @@ int main()
 
 void outputas(vector<Studentas> grupe)
 {
-    cout << left << setw(10) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20) << "Galutinis (Vid.)" << right << setw(20) << "Galutinis (Med.)"<< endl;
+    cout << left << setw(10) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20) << "Galutinis (Vid.)" << right << setw(20) << "Galutinis (Med.)" << endl;
     cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
     for (auto A : grupe)
         cout << left << setw(10) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
-
 }
 
-
-void inputas(vector<Studentas>& grupe)
+void inputas(vector<Studentas> &grupe)
 {
     srand(time(NULL));
     Studentas A;
-    while(true)
-    {
-        cout << "Iveskite 0, kad baigti ivedinet duomenis" << endl;
-        cout << "Iveskite varda ir pavarde: ";
-        cin >> A.vardas;
-        if(A.vardas == "0")
-            break;
-        cin >> A.pavarde;
-        cout << "Iveskite semestro ivercius. Kai baigsite iveskite 0" << endl;
-        cout << "Jeigu pageidaujate, kad pazymiai butu atsitiktiniai, iveskite -1" << endl;
-        int sum = 0;
-        int temp = -2;
-        int i = 1;
-        while(true)
-        {
-            cout << "Iveskite " << i << " pazymi: ";
-            cin >> temp;
-            if(temp == -1)
-            {
-                temp = rand() % 10 + 1;
-                cout << "Sugeneruotas pazymys: " << temp << endl;
-            }
-            if(temp == 0)
-                break;
-            A.paz.push_back(temp);
-            sum += temp;
-            i++;
-        }
-        cout << "Jeigu pageidaujate, kad egzamino rezultatas butu atsitiktiniai, iveskite -1" << endl;
-        cout << "Iveskite egzamino invertinima: ";
-        cin >> temp;
-        if(temp == -1)
-        {
-            A.egz = rand() % 10 + 1;
-            cout << "Sugeneruotas pazymys: " << A.egz << endl;
-        }
-        else
-            A.egz = temp;
-        int length = A.paz.size();
-        sort(A.paz.begin(), A.paz.end());
-        if(length == 0)
-        {
-            A.med = A.egz * 0.6;
-            A.vid = A.med;
-        }
-        else if (length % 2 == 0)
-        {
-            A.med = (A.paz[length / 2 - 1] + A.paz[length / 2]) / 2.0 * 0.4 + A.egz * 0.6;
-            A.vid = sum * 1.0 / (length * 1.0) * 0.4 + A.egz * 0.6;
-        }
-        else
-        {
-            A.med = A.paz[length / 2] * 0.4 + A.egz * 0.6;
-            A.vid = sum * 1.0 / (length * 1.0) * 0.4 + A.egz * 0.6;
-        }
 
-        grupe.push_back(A);
-        A.paz.clear();
+    while (true)
+    {
+        int t = 0;
+        cout << "Pasirinkite norima buda ivesti duomenis" << endl;
+        cout << "1 - ranka\n2 - generuoti tik pazymius\n3 - generuoti studentu vardus, pavardes ir pazymius\n4 - baigti darba\n";
+        cin >> t;
+        if (t == 1)
+        {
+            while (true)
+            {
+                cout << "Iveskite 0, kad baigti ivedinet duomenis" << endl;
+                cout << "Iveskite varda ir pavarde: ";
+                cin >> A.vardas;
+                if (A.vardas == "0")
+                    break;
+
+                cin >> A.pavarde;
+                cout << "Iveskite semestro ivercius. Kai baigsite iveskite 0" << endl;
+                int sum = 0;
+                int temp = -2;
+                int i = 1;
+                while (true)
+                {
+                    cout << "Iveskite " << i << " pazymi: ";
+                    cin >> temp;
+                    if (temp == -1)
+                    {
+                        for (int ii = 0; ii < 10; ii++)
+                        {
+                            int rand_paz = rand() % 10 + 1;
+                            cout << "Sugeneruotas pazymys: " << rand_paz << endl;
+                            A.paz.push_back(rand_paz);
+                            sum += rand_paz;
+                        }
+                        break;
+                    }
+                    if (temp == 0)
+                        break;
+                    A.paz.push_back(temp);
+                    sum += temp;
+                    i++;
+                }
+                cout << "Iveskite egzamino invertinima: ";
+                cin >> A.egz;
+                MedVidSkaciavimas(A, sum);
+                grupe.push_back(A);
+                A.paz.clear();
+            }
+        }
+        if (t == 2)
+        {
+            while (true)
+            {
+                cout << "Iveskite 0, kad baigti ivedinet duomenis" << endl;
+                cout << "Iveskite varda ir pavarde: ";
+                cin >> A.vardas;
+                if (A.vardas == "0")
+                    break;
+                cin >> A.pavarde;
+                int sum = 0, rand_paz;
+                for (int i = 1; i <= 10; i++)
+                {
+                    rand_paz = rand() % 10 + 1;
+                    cout << "Sugeneruotas " << i << " pazymys: " << rand_paz << endl;
+                    A.paz.push_back(rand_paz);
+                    sum += rand_paz;
+                }
+                rand_paz = rand() % 10 + 1;
+                cout << "Sugeneruotas egzamino invertinimas: " << rand_paz << endl;
+                MedVidSkaciavimas(A, sum);
+                grupe.push_back(A);
+                A.paz.clear();
+            }
+        }
+        if (t == 3)
+        {
+            for (int i = 1; i <= 10; i++)
+            {
+                int rand_lytis = rand() % 2 + 1;
+                A.vardas = randomVardas(rand_lytis);
+                A.pavarde = randomPavarde(rand_lytis);
+                cout << "Sugeneruotas " << i << " vardas ir pavarde: " << A.vardas << " " << A.pavarde << endl;
+                int sum = 0, rand_paz;
+                for (int ii = 1; ii <= 10; ii++)
+                {
+                    rand_paz = rand() % 10 + 1;
+                    cout << "Sugeneruotas " << ii << " pazymys: " << rand_paz << endl;
+                    A.paz.push_back(rand_paz);
+                    sum += rand_paz;
+                }
+                A.egz = rand() % 10 + 1;
+                cout << "Sugeneruotas egzamino invertinimas: " << A.egz << endl;
+                MedVidSkaciavimas(A, sum);
+                grupe.push_back(A);
+                A.paz.clear();
+            }
+        }
+        if (t == 4)
+            break;
     }
+}
+
+void MedVidSkaciavimas(Studentas &A, int sum = 0)
+{
+    int length = A.paz.size();
+    if (length == 0)
+    {
+        A.med = A.egz * 0.6;
+        A.vid = A.med;
+        return;
+    }
+    sort(A.paz.begin(), A.paz.end());
+    if (length % 2 == 0)
+        A.med = (A.paz[length / 2 - 1] + A.paz[length / 2]) / 2.0 * 0.4 + A.egz * 0.6;
+    else
+        A.med = A.paz[length / 2] * 0.4 + A.egz * 0.6;
+    A.vid = sum * 1.0 / (length * 1.0) * 0.4 + A.egz * 0.6;
+}
+
+string randomVardas(int n)
+{
+    if (n == 1)
+        return vyr_vardai[rand() % vyr_vardai.size()];
+    else if(n == 2)
+        return mot_vardai[rand() % mot_vardai.size()];
+
+    return "Jakub"; //kad nebutu warning
+}
+
+string randomPavarde(int n)
+{
+    if (n == 1)
+        return vyr_pavardes[rand() % vyr_pavardes.size()];
+    else if(n == 2)
+        return mot_pavardes[rand() % mot_pavardes.size()];
+
+    return "Rogoza"; //kad nebutu warning
 }
