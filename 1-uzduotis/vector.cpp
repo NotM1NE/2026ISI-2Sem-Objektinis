@@ -16,9 +16,7 @@ using std::sort;
 using std::string;
 using std::vector;
 
-const vector<string> vyr_vardai = {"Jonas", "Mantas", "Tomas", "Lukas", "Karolis", "Darius", "Paulius", "Mindaugas", "Justas", "Rokas",};
-
-const vector<string> mot_vardai = {"Agne", "Ieva", "Egle", "Gabija", "Monika", "Karolina", "Viktorija", "Emilija", "Justina", "Greta"};
+const vector<string> vardai = {"Jonas", "Mantas", "Tomas", "Lukas", "Karolis", "Darius", "Paulius", "Mindaugas", "Justas", "Rokas", "Agne", "Ieva", "Egle", "Gabija", "Monika", "Karolina", "Viktorija", "Emilija", "Justina", "Greta"};
 
 const vector<string> vyr_pavardes = {"Kazlauskas", "Jankauskas", "Petrauskas", "Stankevicius", "Zukauskas", "Butkus", "Pocius", "Urbonas", "Mockus", "Savickas"};
 
@@ -35,8 +33,7 @@ struct Studentas
 void inputas(vector<Studentas> &grupe);
 void outputas(vector<Studentas> grupe);
 void MedVidSkaciavimas(Studentas &A, int sum);
-string randomPavarde(int n);
-string randomVardas(int n);
+void randomVardasPavarde(string &vardas, string &pavarde);
 
 int main()
 {
@@ -84,17 +81,6 @@ void inputas(vector<Studentas> &grupe)
                 {
                     cout << "Iveskite " << i << " pazymi: ";
                     cin >> temp;
-                    if (temp == -1)
-                    {
-                        for (int ii = 0; ii < 10; ii++)
-                        {
-                            int rand_paz = rand() % 10 + 1;
-                            cout << "Sugeneruotas pazymys: " << rand_paz << endl;
-                            A.paz.push_back(rand_paz);
-                            sum += rand_paz;
-                        }
-                        break;
-                    }
                     if (temp == 0)
                         break;
                     A.paz.push_back(temp);
@@ -137,9 +123,7 @@ void inputas(vector<Studentas> &grupe)
         {
             for (int i = 1; i <= 10; i++)
             {
-                int rand_lytis = rand() % 2 + 1;
-                A.vardas = randomVardas(rand_lytis);
-                A.pavarde = randomPavarde(rand_lytis);
+                randomVardasPavarde(A.vardas, A.pavarde);
                 cout << "Sugeneruotas " << i << " vardas ir pavarde: " << A.vardas << " " << A.pavarde << endl;
                 int sum = 0, rand_paz;
                 for (int ii = 1; ii <= 10; ii++)
@@ -161,7 +145,7 @@ void inputas(vector<Studentas> &grupe)
     }
 }
 
-void MedVidSkaciavimas(Studentas &A, int sum = 0)
+void MedVidSkaciavimas(Studentas &A, int sum)
 {
     int length = A.paz.size();
     if (length == 0)
@@ -178,22 +162,11 @@ void MedVidSkaciavimas(Studentas &A, int sum = 0)
     A.vid = sum * 1.0 / (length * 1.0) * 0.4 + A.egz * 0.6;
 }
 
-string randomVardas(int n)
+void randomVardasPavarde(string &vardas, string &pavarde)
 {
-    if (n == 1)
-        return vyr_vardai[rand() % vyr_vardai.size()];
-    else if(n == 2)
-        return mot_vardai[rand() % mot_vardai.size()];
-
-    return "Jakub"; //kad nebutu warning
-}
-
-string randomPavarde(int n)
-{
-    if (n == 1)
-        return vyr_pavardes[rand() % vyr_pavardes.size()];
-    else if(n == 2)
-        return mot_pavardes[rand() % mot_pavardes.size()];
-
-    return "Rogoza"; //kad nebutu warning
+    vardas = vardai[rand() % vardai.size()];
+    if(vardas.back() == 's')
+        pavarde = vyr_pavardes[rand() % vyr_pavardes.size()];
+    else
+        pavarde = mot_pavardes[rand() % mot_pavardes.size()];
 }

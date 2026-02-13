@@ -16,6 +16,11 @@ using std::sort;
 using std::string;
 using std::vector;
 
+const string vardai[] = {"Jonas", "Mantas", "Tomas", "Lukas", "Karolis", "Darius", "Paulius", "Mindaugas", "Justas", "Rokas", "Agne", "Ieva", "Egle", "Gabija", "Monika", "Karolina", "Viktorija", "Emilija", "Justina", "Greta"};
+
+const string vyr_pavardes[] = {"Kazlauskas", "Jankauskas", "Petrauskas", "Stankevicius", "Zukauskas", "Butkus", "Pocius", "Urbonas", "Mockus", "Savickas"};
+
+const string mot_pavardes[] = {"Kazlauskiene", "Jankauskiene", "Petrauskiene", "Stankeviciene", "Zukauskiene", "Butkiene", "Pociene", "Urboniene", "Mockiene", "Savickiene"};
 
 const int N = 100; // maks paz ir studentu kiekis
 
@@ -29,6 +34,8 @@ struct Studentas
 
 void inputas(Studentas grupe[], int &n);
 void outputas(Studentas grupe[], int n);
+void MedVidSkaciavimas(Studentas grupe[], int n, int length, int sum);
+void randomVardasPavarde(string &vardas, string &pavarde);
 
 int main()
 {
@@ -53,69 +60,131 @@ void inputas(Studentas grupe[], int &n)
     n = 0;
     while (true)
     {
-        if (n >= N)
+        int t = 0;
+        cout << "Pasirinkite norima buda ivesti duomenis" << endl;
+        cout << "1 - ranka\n2 - generuoti tik pazymius\n3 - generuoti studentu vardus, pavardes ir pazymius\n4 - baigti darba\n";
+        cin >> t;
+        if (t == 1)
         {
-            cout << "Pasiektas maksimalus studentu kiekis: " << N << endl;
-            break;
-        }
-        cout << "Iveskite 0, kad baigsite iveskite duomenis" << endl;
-        cout << "Iveskite varda ir pavarde: ";
-        cin >> grupe[n].vardas;
-        if (grupe[n].vardas == "0")
-            break;
-        cin >> grupe[n].pavarde;
-        cout << "Iveskite semestro ivercius. Kai baigsite iveskite 0" << endl;
-        cout << "Jeigu pageidaujate, kad pazymiai butu atsitiktiniai, iveskite -1" << endl;
-        int sum = 0;
-        int temp = -1;
-        int i = 0;
-        while (true)
-        {
-            if (i >= N)
+            while (true)
             {
-                cout << "Pasiektas maksimalus pazymiu kiekis: " << N << endl;
-                break;
+                cout << "Iveskite 0, kad baigti ivedinet duomenis" << endl;
+                cout << "Iveskite varda ir pavarde: ";
+                cin >> grupe[n].vardas;
+                if (grupe[n].vardas == "0")
+                    break;
+
+                cin >> grupe[n].pavarde;
+                cout << "Iveskite semestro ivercius. Kai baigsite iveskite 0" << endl;
+                int sum = 0;
+                int temp = -2;
+                int i = 0;
+                while (true)
+                {
+                    cout << "Iveskite " << i + 1 << " pazymi: ";
+                    cin >> temp;
+                    if (temp == 0)
+                        break;
+                    grupe[n].C[i] = temp;
+                    sum += temp;
+                    i++;
+                }
+                cout << "Iveskite egzamino invertinima: ";
+                cin >> grupe[N].egz;
+                MedVidSkaciavimas(grupe, n, i, sum);
+                n++;
+                if (n >= N)
+                {
+                    cout << "Pasiektas maksimalus studentu skaicius" << endl;
+                    break;
+                }
             }
-            cout << "Iveskite " << i + 1 << " pazymi: ";
-            cin >> temp;
-            if(temp == -1)
+        }
+        if (t == 2)
+        {
+            while (true)
             {
-                temp = rand() % 10 + 1;
-                cout << "Sugeneruotas pazymys: " << temp << endl;
+                cout << "Iveskite 0, kad baigti ivedinet duomenis" << endl;
+                cout << "Iveskite varda ir pavarde: ";
+                cin >> grupe[n].vardas;
+                if (grupe[n].vardas == "0")
+                    break;
+                cin >> grupe[n].pavarde;
+                int sum = 0,
+                    rand_paz,
+                    length = 10;
+                for (int i = 1; i <= length; i++)
+                {
+                    rand_paz = rand() % 10 + 1;
+                    grupe[n].C[i - 1] = rand_paz;
+                    cout << "Sugeneruotas " << i << " pazymys: " << grupe[n].C[i - 1] << endl;
+                    sum += rand_paz;
+                }
+                rand_paz = rand() % 10 + 1;
+                cout << "Sugeneruotas egzamino invertinimas: " << rand_paz << endl;
+                MedVidSkaciavimas(grupe, n, length, sum);
+                n++;
+                if (n >= N)
+                {
+                    cout << "Pasiektas maksimalus studentu skaicius" << endl;
+                    break;
+                }
             }
-            if (temp == 0)
-                break;
-            grupe[n].C[i] = temp;
-            sum += temp;
-            i++;
         }
-        cout << "Jeigu pageidaujate, kad egzamino rezultatas butu atsitiktiniai, iveskite -1" << endl;
-        cout << "Iveskite egzamino invertinima: ";
-        cin >> temp;
-        if(temp == -1)
+        if (t == 3)
         {
-            grupe[n].egz = rand() % 10 + 1;
-            cout << "Sugeneruotas pazymys: " << grupe[n].egz << endl;
+            for (int i = 1; i <= 10; i++)
+            {
+                randomVardasPavarde(grupe[n].vardas, grupe[n].pavarde);
+                cout << "Sugeneruotas " << i << " vardas ir pavarde: " << grupe[n].vardas << " " << grupe[n].pavarde << endl;
+                int sum = 0,
+                    rand_paz,
+                    length = 10;
+                for (int ii = 1; ii <= length; ii++)
+                {
+                    rand_paz = rand() % 10 + 1;
+                    grupe[n].C[ii - 1] = rand_paz;
+                    cout << "Sugeneruotas " << ii << " pazymys: " << grupe[n].C[i - 1] << endl;
+                    sum += rand_paz;
+                }
+                grupe[n].egz = rand() % 10 + 1;
+                cout << "Sugeneruotas egzamino invertinimas: " << grupe[n].egz << endl;
+                MedVidSkaciavimas(grupe, n, length, sum);
+                n++;
+                if (n >= N)
+                {
+                    cout << "Pasiektas maksimalus studentu skaicius" << endl;
+                    break;
+                }
+            }
         }
-        else
-            grupe[n].egz = temp;
-        int length = i;
-        sort(grupe[n].C, grupe[n].C + length);
-        if (length == 0)
-        {
-            grupe[n].med = grupe[n].egz * 0.6;
-            grupe[n].vid = grupe[n].med;
-        }
-        else if (length % 2 == 0)
-        {
-            grupe[n].med = (grupe[n].C[length / 2 - 1] + grupe[n].C[length / 2]) / 2.0 * 0.4 + grupe[n].egz * 0.6;
-            grupe[n].vid = sum * 1.0 / (length * 1.0) * 0.4 + grupe[n].egz * 0.6;
-        }
-        else
-        {
-            grupe[n].med = grupe[n].C[length / 2] * 0.4 + grupe[n].egz * 0.6;
-            grupe[n].vid = sum * 1.0 / (length * 1.0) * 0.4 + grupe[n].egz * 0.6;
-        }
-        n++;
+        if (t == 4)
+            break;
     }
+}
+
+void MedVidSkaciavimas(Studentas grupe[], int n, int length, int sum = 0)
+{
+
+    if (length == 0)
+    {
+        grupe[n].med = grupe[n].egz * 0.6;
+        grupe[n].vid = grupe[n].med;
+        return;
+    }
+    sort(grupe[n].C, grupe[n].C + length);
+    if (length % 2 == 0)
+        grupe[n].med = (grupe[n].C[length / 2 - 1] + grupe[n].C[length / 2]) / 2.0 * 0.4 + grupe[n].egz * 0.6;
+    else
+        grupe[n].med = grupe[n].C[length / 2] * 0.4 + grupe[n].egz * 0.6;
+    grupe[n].vid = sum * 1.0 / (length * 1.0) * 0.4 + grupe[n].egz * 0.6;
+}
+
+void randomVardasPavarde(string &vardas, string &pavarde)
+{
+    vardas = vardai[rand() % sizeof(vardai) / sizeof(vardai[0])];
+    if (vardas.back() == 's')
+        pavarde = vyr_pavardes[rand() % sizeof(vyr_pavardes) / sizeof(vyr_pavardes[0])];
+    else
+        pavarde = mot_pavardes[rand() % sizeof(mot_pavardes) / sizeof(mot_pavardes[0])];
 }
