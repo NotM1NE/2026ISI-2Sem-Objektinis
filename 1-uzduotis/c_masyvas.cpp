@@ -48,10 +48,33 @@ int main()
 
 void outputas(Studentas grupe[], int n)
 {
-    cout << left << setw(10) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20) << "Galutinis (Vid.)" << right << setw(20) << "Galutinis (Med.)" << endl;
-    cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
-    for (int i = 0; i < n; i++)
-        cout << left << setw(10) << grupe[i].vardas << left << setw(20) << grupe[i].pavarde << right << setw(20) << fixed << setprecision(2) << grupe[i].vid << right << setw(20) << grupe[i].med << endl;
+    int temp;
+    cout << "Pasirinkite norima buda isvesti duomenis" << endl;
+    cout << "1 - generuoti tik Vidurki\n2 - generuoti tik Mediana\n3 - generuoti ir Vidurki ir Mediana\n";
+    cin >> temp;
+
+    cout << left << setw(10) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
+    if (temp == 1)
+    {
+        cout << right << setw(20) << "Galutinis (Vid.)" << endl;
+        cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
+        for (int i = 0; i < n; i++)
+            cout << left << setw(10) << grupe[i].vardas << left << setw(20) << grupe[i].pavarde << right << setw(20) << fixed << setprecision(2) << grupe[i].vid << endl;
+    }
+    if (temp == 2)
+    {
+        cout << right << setw(20) << "Galutinis (Med.)" << endl;
+        cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
+        for (int i = 0; i < n; i++)
+            cout << left << setw(10) << grupe[i].vardas << left << setw(20) << grupe[i].pavarde << right << setw(20) << fixed << setprecision(2) << grupe[i].med << endl;
+    }
+    if (temp == 3)
+    {
+        cout<< right << setw(20) << "Galutinis (Vid.)" << right << setw(20) << "Galutinis (Med.)" << endl;
+        cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
+        for (int i = 0; i < n; i++)
+            cout << left << setw(10) << grupe[i].vardas << left << setw(20) << grupe[i].pavarde << right << setw(20) << fixed << setprecision(2) << grupe[i].vid << right << setw(20) << grupe[i].med << endl;
+    }
 }
 
 void inputas(Studentas grupe[], int &n)
