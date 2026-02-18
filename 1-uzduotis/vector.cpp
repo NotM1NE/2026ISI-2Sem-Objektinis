@@ -52,17 +52,18 @@ void outputas(vector<Studentas> grupe)
     cout << "Pasirinkite norima buda isvesti duomenis" << endl;
     cout << "1 - generuoti tik Vidurki\n2 - generuoti tik Mediana\n3 - generuoti ir Vidurki ir Mediana\n";
     intInput(temp);
+    cout << left << setw(10) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
     if (temp == 1)
     {
         cout << right << setw(20) << "Galutinis (Vid.)" << endl;
-        cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
+        cout << left << setw(10) << "--------------------------------------------------------" << endl;
         for (auto A : grupe)
             cout << left << setw(10) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << endl;
     }
     if (temp == 2)
     {
         cout << right << setw(20) << "Galutinis (Med.)" << endl;
-        cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
+        cout << left << setw(10) << "---------------------------------------------------------" << endl;
         for (auto A : grupe)
             cout << left << setw(10) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.med << endl;
     }
@@ -153,6 +154,7 @@ void inputas(vector<Studentas> &grupe)
                 }
                 rand_paz = rand() % 10 + 1;
                 cout << "Sugeneruotas egzamino invertinimas: " << rand_paz << endl;
+                A.egz = rand_paz;
                 MedVidSkaciavimas(A, sum);
                 grupe.push_back(A);
                 A.paz.clear();
