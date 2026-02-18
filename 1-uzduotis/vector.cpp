@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
+#include <limits>
 
 using std::cin;
 using std::cout;
@@ -47,10 +48,31 @@ int main()
 
 void outputas(vector<Studentas> grupe)
 {
-    cout << left << setw(10) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20) << "Galutinis (Vid.)" << right << setw(20) << "Galutinis (Med.)" << endl;
-    cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
-    for (auto A : grupe)
-        cout << left << setw(10) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
+    int temp;
+    cout << "Pasirinkite norima buda isvesti duomenis" << endl;
+    cout << "1 - generuoti tik Vidurki\n2 - generuoti tik Mediana\n3 - generuoti ir Vidurki ir Mediana\n";
+    intInput(temp);
+    if (temp == 1)
+    {
+        cout << right << setw(20) << "Galutinis (Vid.)" << endl;
+        cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
+        for (auto A : grupe)
+            cout << left << setw(10) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << endl;
+    }
+    if (temp == 2)
+    {
+        cout << right << setw(20) << "Galutinis (Med.)" << endl;
+        cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
+        for (auto A : grupe)
+            cout << left << setw(10) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.med << endl;
+    }
+    if (temp == 3)
+    {
+        cout << right << setw(20) << "Galutinis (Vid.)" << right << setw(20) << "Galutinis (Med.)" << endl;
+        cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
+        for (auto A : grupe)
+            cout << left << setw(10) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
+    }
 }
 
 void inputas(vector<Studentas> &grupe)
@@ -94,12 +116,16 @@ void inputas(vector<Studentas> &grupe)
                     sum += temp;
                     i++;
                 }
-                cout << "Iveskite egzamino invertinima: ";
-                intInput(temp);
-                if (temp < 0 || temp > 10)
+                while (true)
                 {
-                    cout << "Pazymys turi buti tarp 1 ir 10. Bandykite dar karta." << endl;
-                    continue;
+                    cout << "Iveskite egzamino invertinima: ";
+                    intInput(temp);
+                    if (temp < 1 || temp > 10)
+                    {
+                        cout << "Pazymys turi buti tarp 1 ir 10. Bandykite dar karta." << endl;
+                        continue;
+                    }
+                    break;
                 }
                 A.egz = temp;
                 MedVidSkaciavimas(A, sum);

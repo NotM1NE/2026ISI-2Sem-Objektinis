@@ -136,7 +136,7 @@ void inputas(Studentas *&grupe, int &n, int &talpaS)
                 {
                     cout << "Iveskite egzamino invertinima: ";
                     intInput(temp);
-                    if (temp < 0 || temp > 10)
+                    if (temp < 1 || temp > 10)
                     {
                         cout << "Pazymys turi buti tarp 1 ir 10. Bandykite dar karta." << endl;
                         continue;
