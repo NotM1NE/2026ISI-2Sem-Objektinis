@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <limits>
 
 using std::cin;
 using std::cout;
@@ -41,6 +42,8 @@ void randomVardasPavarde(string &vardas, string &pavarde);
 void UztikrintiVietosPazymiams(Studentas &grupe, int reikalinga);
 void UztikrintiVietosStudentams(Studentas *&grupe, int &talpaS, int reikalinga);
 
+void intInput(int &temp);
+
 int main()
 {
     Studentas *grupe = nullptr;
@@ -49,7 +52,7 @@ int main()
     int n;
     inputas(grupe, n, talpaS);
     outputas(grupe, n);
-    //atlaisviname atmintyje uzimta vieta
+    // atlaisviname atmintyje uzimta vieta
     for (int i = 0; i < n; i++)
         delete[] grupe[i].C;
     delete[] grupe;
@@ -62,8 +65,7 @@ void outputas(Studentas *grupe, int n)
     int temp;
     cout << "Pasirinkite norima buda isvesti duomenis" << endl;
     cout << "1 - generuoti tik Vidurki\n2 - generuoti tik Mediana\n3 - generuoti ir Vidurki ir Mediana\n";
-    cin >> temp;
-
+    intInput(temp);
     cout << left << setw(10) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
     if (temp == 1)
     {
@@ -97,7 +99,7 @@ void inputas(Studentas *&grupe, int &n, int &talpaS)
         int t = 0;
         cout << "Pasirinkite norima buda ivesti duomenis" << endl;
         cout << "1 - ranka\n2 - generuoti tik pazymius\n3 - generuoti studentu vardus, pavardes ir pazymius\n4 - baigti darba\n";
-        cin >> t;
+        intInput(t);
         if (t == 1)
         {
             while (true)
@@ -117,7 +119,12 @@ void inputas(Studentas *&grupe, int &n, int &talpaS)
                 while (true)
                 {
                     cout << "Iveskite " << grupe[n].kiek + 1 << " pazymi: ";
-                    cin >> temp;
+                    intInput(temp);
+                    if (temp < 0 || temp > 10)
+                    {
+                        cout << "Pazymys turi buti tarp 1 ir 10. Bandykite dar karta." << endl;
+                        continue;
+                    }
                     if (temp == 0)
                         break;
                     UztikrintiVietosPazymiams(grupe[n], grupe[n].kiek + 1);
@@ -125,8 +132,18 @@ void inputas(Studentas *&grupe, int &n, int &talpaS)
                     sum += temp;
                     grupe[n].kiek++;
                 }
-                cout << "Iveskite egzamino invertinima: ";
-                cin >> grupe[n].egz;
+                while(true)
+                {
+                    cout << "Iveskite egzamino invertinima: ";
+                    intInput(temp);
+                    if (temp < 0 || temp > 10)
+                    {
+                        cout << "Pazymys turi buti tarp 1 ir 10. Bandykite dar karta." << endl;
+                        continue;
+                    }
+                    break;
+                }
+                grupe[n].egz = temp;
                 MedVidSkaciavimas(grupe, n, grupe[n].kiek, sum);
                 n++;
             }
@@ -236,7 +253,7 @@ void UztikrintiVietosPazymiams(Studentas &grupe, int reikalinga)
     for (int i = 0; i < grupe.kiek; i++)
         newC[i] = grupe.C[i]; // perkeliame duomenis
 
-    //istriname sena masyva ir rodykle keiciame i nauja masyva
+    // istriname sena masyva ir rodykle keiciame i nauja masyva
     delete[] grupe.C;
     grupe.C = newC;
     grupe.talpa = newTalpa;
@@ -260,4 +277,23 @@ void UztikrintiVietosStudentams(Studentas *&grupe, int &talpaS, int reikalinga)
     delete[] grupe;
     grupe = newGrupe;
     talpaS = newTalpa;
+}
+
+void intInput(int &temp)
+{
+    int input;
+    while (true)
+    {
+        if (cin >> input)
+        {
+            temp = input;
+            return;
+        }
+        else
+        {
+            cout << "Netinkamas ivestis. Bandykite dar karta." << endl;
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
 }

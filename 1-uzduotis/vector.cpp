@@ -35,6 +35,8 @@ void outputas(vector<Studentas> grupe);
 void MedVidSkaciavimas(Studentas &A, int sum);
 void randomVardasPavarde(string &vardas, string &pavarde);
 
+void intInput(int &temp);
+
 int main()
 {
     vector<Studentas> grupe;
@@ -61,7 +63,7 @@ void inputas(vector<Studentas> &grupe)
         int t = 0;
         cout << "Pasirinkite norima buda ivesti duomenis" << endl;
         cout << "1 - ranka\n2 - generuoti tik pazymius\n3 - generuoti studentu vardus, pavardes ir pazymius\n4 - baigti darba\n";
-        cin >> t;
+        intInput(t);
         if (t == 1)
         {
             while (true)
@@ -80,7 +82,12 @@ void inputas(vector<Studentas> &grupe)
                 while (true)
                 {
                     cout << "Iveskite " << i << " pazymi: ";
-                    cin >> temp;
+                    intInput(temp);
+                    if (temp < 0 || temp > 10)
+                    {
+                        cout << "Pazymys turi buti tarp 1 ir 10. Bandykite dar karta." << endl;
+                        continue;
+                    }
                     if (temp == 0)
                         break;
                     A.paz.push_back(temp);
@@ -88,7 +95,13 @@ void inputas(vector<Studentas> &grupe)
                     i++;
                 }
                 cout << "Iveskite egzamino invertinima: ";
-                cin >> A.egz;
+                intInput(temp);
+                if (temp < 0 || temp > 10)
+                {
+                    cout << "Pazymys turi buti tarp 1 ir 10. Bandykite dar karta." << endl;
+                    continue;
+                }
+                A.egz = temp;
                 MedVidSkaciavimas(A, sum);
                 grupe.push_back(A);
                 A.paz.clear();
@@ -165,8 +178,27 @@ void MedVidSkaciavimas(Studentas &A, int sum)
 void randomVardasPavarde(string &vardas, string &pavarde)
 {
     vardas = vardai[rand() % vardai.size()];
-    if(vardas.back() == 's')
+    if (vardas.back() == 's')
         pavarde = vyr_pavardes[rand() % vyr_pavardes.size()];
     else
         pavarde = mot_pavardes[rand() % mot_pavardes.size()];
+}
+
+void intInput(int &temp)
+{
+    int input;
+    while (true)
+    {
+        if (cin >> input)
+        {
+            temp = input;
+            return;
+        }
+        else
+        {
+            cout << "Netinkamas ivestis. Bandykite dar karta." << endl;
+            cin.clear();
+            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+    }
 }
