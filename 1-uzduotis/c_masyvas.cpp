@@ -11,10 +11,12 @@ using std::cout;
 using std::endl;
 using std::fixed;
 using std::left;
+using std::numeric_limits;
 using std::right;
 using std::setprecision;
 using std::setw;
 using std::sort;
+using std::streamsize;
 using std::string;
 
 const string vardai[] = {"Jonas", "Mantas", "Tomas", "Lukas", "Karolis", "Darius", "Paulius", "Mindaugas", "Justas", "Rokas", "Agne", "Ieva", "Egle", "Gabija", "Monika", "Karolina", "Viktorija", "Emilija", "Justina", "Greta"};
@@ -112,6 +114,13 @@ void inputas(Studentas *&grupe, int &n, int &talpaS)
                     break;
 
                 cin >> grupe[n].pavarde;
+                char c = cin.peek(); // patikriname ar yra papildomu simboliu/zodziu
+                if (c != '\n')       // jeigu ne eilutes pabaiga, vadinasi yra papildomu simboliu/zodziu
+                {
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ismesti likuti
+                    cout << "Iveskite tik 2 zodzius (varda ir pavarde).\n";
+                    continue;
+                }
                 cout << "Iveskite semestro ivercius. Kai baigsite iveskite 0" << endl;
                 int sum = 0;
                 int temp = -2;
@@ -132,7 +141,7 @@ void inputas(Studentas *&grupe, int &n, int &talpaS)
                     sum += temp;
                     grupe[n].kiek++;
                 }
-                while(true)
+                while (true)
                 {
                     cout << "Iveskite egzamino invertinima: ";
                     intInput(temp);
@@ -159,6 +168,13 @@ void inputas(Studentas *&grupe, int &n, int &talpaS)
                 if (grupe[n].vardas == "0")
                     break;
                 cin >> grupe[n].pavarde;
+                char c = cin.peek(); // patikriname ar yra papildomu simboliu/zodziu
+                if (c != '\n')       // jeigu ne eilutes pabaiga, vadinasi yra papildomu simboliu/zodziu
+                {
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ismesti likuti
+                    cout << "Iveskite tik 2 zodzius (varda ir pavarde).\n";
+                    continue;
+                }
                 int sum = 0,
                     rand_paz,
                     length = 10;
@@ -212,7 +228,6 @@ void inputas(Studentas *&grupe, int &n, int &talpaS)
 
 void MedVidSkaciavimas(Studentas *grupe, int n, int length, int sum = 0)
 {
-
     if (length == 0)
     {
         grupe[n].med = grupe[n].egz * 0.6;
@@ -293,7 +308,7 @@ void intInput(int &temp)
         {
             cout << "Netinkamas ivestis. Bandykite dar karta." << endl;
             cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
 }

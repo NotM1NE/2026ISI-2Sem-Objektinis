@@ -16,6 +16,8 @@ using std::setw;
 using std::sort;
 using std::string;
 using std::vector;
+using std::numeric_limits;
+using std::streamsize;
 
 const vector<string> vardai = {"Jonas", "Mantas", "Tomas", "Lukas", "Karolis", "Darius", "Paulius", "Mindaugas", "Justas", "Rokas", "Agne", "Ieva", "Egle", "Gabija", "Monika", "Karolina", "Viktorija", "Emilija", "Justina", "Greta"};
 
@@ -96,8 +98,15 @@ void inputas(vector<Studentas> &grupe)
                 cin >> A.vardas;
                 if (A.vardas == "0")
                     break;
-
                 cin >> A.pavarde;
+                char c = cin.peek(); // patikriname ar yra papildomu simboliu/zodziu
+                if (c != '\n') // jeigu ne eilutes pabaiga, vadinasi yra papildomu simboliu/zodziu
+                {
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ismesti likuti
+                    cout << "Iveskite tik 2 zodzius (varda ir pavarde).\n";
+                    continue;
+                }
+
                 cout << "Iveskite semestro ivercius. Kai baigsite iveskite 0" << endl;
                 int sum = 0;
                 int temp = -2;
@@ -144,6 +153,13 @@ void inputas(vector<Studentas> &grupe)
                 if (A.vardas == "0")
                     break;
                 cin >> A.pavarde;
+                char c = cin.peek(); // patikriname ar yra papildomu simboliu/zodziu
+                if (c != '\n') // jeigu ne eilutes pabaiga, vadinasi yra papildomu simboliu/zodziu
+                {
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ismesti likuti
+                    cout << "Iveskite tik 2 zodzius (varda ir pavarde).\n";
+                    continue;
+                }
                 int sum = 0, rand_paz;
                 for (int i = 1; i <= 10; i++)
                 {
@@ -226,7 +242,7 @@ void intInput(int &temp)
         {
             cout << "Netinkamas ivestis. Bandykite dar karta." << endl;
             cin.clear();
-            cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // atminties isvalymas
         }
     }
 }
