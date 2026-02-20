@@ -29,8 +29,8 @@ struct Studentas
 {
     string vardas = "A", pavarde = "BB";
     double *C = nullptr;
-    int talpa = 0;
-    int kiek = 0;
+    int talpa = 0; // kiek pazymiu telpa masyve
+    int kiek = 0; // kiek pazymiu yra ivesta
 
     int egz;
     double vid, med;
@@ -117,7 +117,7 @@ void inputas(Studentas *&grupe, int &n, int &talpaS)
                 char c = cin.peek(); // patikriname ar yra papildomu simboliu/zodziu
                 if (c != '\n')       // jeigu ne eilutes pabaiga, vadinasi yra papildomu simboliu/zodziu
                 {
-                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // ismesti likuti
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n'); //draugo pagalba - isvalo klaidinga ivesti, kad galetume bandyti dar karta
                     cout << "Iveskite tik 2 zodzius (varda ir pavarde).\n";
                     continue;
                 }
@@ -308,7 +308,7 @@ void intInput(int &temp)
         {
             cout << "Netinkamas ivestis. Bandykite dar karta." << endl;
             cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); //draugo pagalba - isvalo klaidinga ivesti, kad galetume bandyti dar karta
         }
     }
 }
