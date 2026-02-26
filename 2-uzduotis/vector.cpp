@@ -30,7 +30,7 @@ const vector<string> vardai = {"Jonas", "Mantas", "Tomas", "Lukas", "Karolis", "
 
 const vector<string> vyr_pavardes = {"Kazlauskas", "Jankauskas", "Petrauskas", "Stankevicius", "Zukauskas", "Butkus", "Pocius", "Urbonas", "Mockus", "Savickas"};
 
-const vector<string> mot_pavardes = {"Kazlauskiene", "Jankauskiene", "Petrauskiene", "Stankeviciene", "Zukauskiene", "Butkienė", "Pociene", "Urboniene", "Mockiene", "Savickiene"};
+const vector<string> mot_pavardes = {"Kazlauskiene", "Jankauskiene", "Petrauskiene", "Stankeviciene", "Zukauskiene", "Butkiene", "Pociene", "Urboniene", "Mockiene", "Savickiene"};
 
 class Timer
 {
@@ -66,6 +66,8 @@ void inputas(vector<Studentas> &grupe);
 void outputas(vector<Studentas> grupe);
 void MedVidSkaciavimas(Studentas &A, int sum);
 void randomVardasPavarde(string &vardas, string &pavarde);
+void fileRead(vector<Studentas> &grupe, string file_name);
+void fileTest(vector<Studentas> &grupe, string file_name);
 
 void intInput(int &temp);
 
@@ -228,51 +230,27 @@ void inputas(vector<Studentas> &grupe)
         }
         if (t == 4)
         {
-            string temp;
-            int balas;
-            double time = 0;  
-            ifstream duomenys("studentai100000.txt");
-            if (duomenys.is_open())
+            double time = 0;
+            cout << "Pasirinkite norima duomenu faila" << endl;
+            cout << "1 - kursiokai.txt\n2 - studentai10000.txt\n3 - studentai100000.txt\n";
+            intInput(t);
+            Timer timer;
+            switch (t)
             {
-                for (int i = 0; i < 5; i++)
-                {
-                    Timer timer;
-                    getline(duomenys, temp);
-                    while (!duomenys.eof())
-                    {
-                        duomenys >> A.vardas >> A.pavarde;
-                        getline(duomenys, temp);
-                        stringstream x(temp);
-                        int sum = 0;
-                        while (x >> balas)
-                        {
-                            if (x.eof())
-                                A.egz = balas;
-                            else
-                            {
-                                A.paz.push_back(balas);
-                                sum += balas;
-                            }
-                        }
-                        
-                        MedVidSkaciavimas(A, sum);
-                        grupe.push_back(A);
-                        A.paz.clear();
-                    }
-                    cout << "Testas " << i + 1 << " :"<< fixed << setprecision(6) << timer.elapsed() << endl;
-                    time += timer.elapsed();
-                    timer.reset();
-                    
-                }
-                time /= 5;
-                cout << "Duomenu laiko nuskaitymo vidurkis: " << fixed << setprecision(6) << time << endl;
-                duomenys.close();
+            case 1:
+                fileTest(grupe, "kursiokai.txt");
+                break;
+            case 2:
+                fileTest(grupe, "studentai10000.txt");
+                break;
+            case 3:
+                fileTest(grupe, "studentai100000.txt");
+                break;
+            default:
+                break;
             }
-            else
-            {
-                cout << "Klaida atidarnat faila" << endl;
-            }
-            duomenys.close();
+            time = timer.elapsed() / 5;
+            cout << "Vidutinis failo nuskaitymo laikas: " << fixed << setprecision(6) << time << " sekundes." << endl;
         }
         if (t == 5)
             break;
@@ -321,5 +299,54 @@ void intInput(int &temp)
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n'); // atminties isvalymas
         }
+    }
+}
+
+void fileTest(vector<Studentas> &grupe, string file_name)
+{
+    vector<Studentas> temp_grupe; //testinimui sukuriame laikina vektoriu, kad nebutu itakos originaliam grupe vektoriui, nes fileRead funkcija modifikuoja perduodama vektoriu
+    fileRead(grupe, file_name);
+    for (int i = 0; i < 4; i++)
+    {
+        fileRead(temp_grupe, file_name);
+         temp_grupe.clear();
+    }
+}
+
+void fileRead(vector<Studentas> &grupe, string file_name)
+{
+    Studentas A;
+    string temp;
+    int balas;
+    ifstream duomenys(file_name);
+    if (duomenys.is_open())
+    {
+        getline(duomenys, temp); // skip header
+        while (!duomenys.eof())
+        {
+            duomenys >> A.vardas >> A.pavarde;
+            getline(duomenys, temp);
+            stringstream x(temp);
+            int sum = 0;
+            while (x >> balas)
+            {
+                if (x.eof())
+                    A.egz = balas;
+                else
+                {
+                    A.paz.push_back(balas);
+                    sum += balas;
+                }
+            }
+            MedVidSkaciavimas(A, sum);
+            grupe.push_back(A);
+            A.paz.clear();
+        }
+        duomenys.close();
+    }
+    else
+    {
+        cout << "Klaida atidarnat faila" << endl;
+        return;
     }
 }
