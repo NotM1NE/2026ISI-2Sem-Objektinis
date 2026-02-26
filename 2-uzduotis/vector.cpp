@@ -229,33 +229,44 @@ void inputas(vector<Studentas> &grupe)
         if (t == 4)
         {
             string temp;
-            int balas, sum = 0;
-            ifstream duomenys("kursiokai.txt");
+            int balas;
+            double time = 0;  
+            ifstream duomenys("studentai100000.txt");
             if (duomenys.is_open())
             {
-                Timer timer;
-                getline(duomenys, temp);
-                while (!duomenys.eof())
+                for (int i = 0; i < 5; i++)
                 {
-                    duomenys >> A.vardas >> A.pavarde;
+                    Timer timer;
                     getline(duomenys, temp);
-                    stringstream x(temp);
-                    while (x >> balas)
+                    while (!duomenys.eof())
                     {
-                        if (x.eof())
-                            A.egz = balas;
-                        else
+                        duomenys >> A.vardas >> A.pavarde;
+                        getline(duomenys, temp);
+                        stringstream x(temp);
+                        int sum = 0;
+                        while (x >> balas)
                         {
-                            A.paz.push_back(balas);
-                            sum += balas;
+                            if (x.eof())
+                                A.egz = balas;
+                            else
+                            {
+                                A.paz.push_back(balas);
+                                sum += balas;
+                            }
                         }
+                        
+                        MedVidSkaciavimas(A, sum);
+                        grupe.push_back(A);
+                        A.paz.clear();
                     }
-                    MedVidSkaciavimas(A, sum);
-                    grupe.push_back(A);
-                    A.paz.clear();
+                    cout << "Testas " << i + 1 << " :"<< fixed << setprecision(6) << timer.elapsed() << endl;
+                    time += timer.elapsed();
+                    timer.reset();
+                    
                 }
-                auto time = timer.elapsed();
-                cout << "Duomenis buvo nuskaityti per "<< fixed << setprecision(6) << time << endl;
+                time /= 5;
+                cout << "Duomenu laiko nuskaitymo vidurkis: " << fixed << setprecision(6) << time << endl;
+                duomenys.close();
             }
             else
             {
