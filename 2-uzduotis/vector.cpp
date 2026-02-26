@@ -68,6 +68,7 @@ void MedVidSkaciavimas(Studentas &A, int sum);
 void randomVardasPavarde(string &vardas, string &pavarde);
 void fileRead(vector<Studentas> &grupe, string file_name);
 void fileTest(vector<Studentas> &grupe, string file_name);
+void sortByUser(vector<Studentas> &grupe, int temp);
 
 void intInput(int &temp);
 
@@ -85,6 +86,7 @@ void outputas(vector<Studentas> grupe)
     cout << "Pasirinkite norima buda isvesti duomenis" << endl;
     cout << "1 - generuoti tik Vidurki\n2 - generuoti tik Mediana\n3 - generuoti ir Vidurki ir Mediana\n";
     intInput(temp);
+    sortByUser(grupe, temp);
     cout << left << setw(10) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
     if (temp == 1)
     {
@@ -232,7 +234,7 @@ void inputas(vector<Studentas> &grupe)
         {
             double time = 0;
             cout << "Pasirinkite norima duomenu faila" << endl;
-            cout << "1 - kursiokai.txt\n2 - studentai10000.txt\n3 - studentai100000.txt\n";
+            cout << "1 - kursiokai.txt\n2 - studentai10000.txt\n3 - studentai100000.txt\n4 - studentai1000000.txt\n";
             intInput(t);
             Timer timer;
             switch (t)
@@ -245,6 +247,9 @@ void inputas(vector<Studentas> &grupe)
                 break;
             case 3:
                 fileTest(grupe, "studentai100000.txt");
+                break;
+            case 4:
+                fileTest(grupe, "studentai1000000.txt");
                 break;
             default:
                 break;
@@ -304,12 +309,12 @@ void intInput(int &temp)
 
 void fileTest(vector<Studentas> &grupe, string file_name)
 {
-    vector<Studentas> temp_grupe; //testinimui sukuriame laikina vektoriu, kad nebutu itakos originaliam grupe vektoriui, nes fileRead funkcija modifikuoja perduodama vektoriu
+    vector<Studentas> temp_grupe; // testinimui sukuriame laikina vektoriu, kad nebutu itakos originaliam grupe vektoriui, nes fileRead funkcija modifikuoja perduodama vektoriu
     fileRead(grupe, file_name);
     for (int i = 0; i < 4; i++)
     {
         fileRead(temp_grupe, file_name);
-         temp_grupe.clear();
+        temp_grupe.clear();
     }
 }
 
@@ -348,5 +353,68 @@ void fileRead(vector<Studentas> &grupe, string file_name)
     {
         cout << "Klaida atidarnat faila" << endl;
         return;
+    }
+}
+
+void sortByUser(vector<Studentas> &grupe, int temp)
+{
+    int t;
+    cout << "Pasirinkite pagal ka rikiuoti studentus" << endl;
+    while (true)
+    {
+        if (temp == 1)
+        {
+            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Vid.)\n";
+            intInput(t);
+            if (t == 4)
+            {
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                continue;
+            }
+            break;
+        }
+        if (temp == 2)
+        {
+            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Vid.)\n";
+            intInput(t);
+            if (t == 4)
+            {
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                continue;
+            }
+            if (t == 3)
+            {
+                t = 4;
+                break;
+            }
+            break;
+        }
+        if (temp == 3)
+        {
+            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Vid.)\n4 - pagal galutini (Med.)\n";
+            intInput(t);
+            break;
+        }
+    }
+    switch (t)
+    {
+    case 1:
+        sort(grupe.begin(), grupe.end(), [](const Studentas &a, const Studentas &b)
+             { return a.vardas < b.vardas; });
+        break;
+    case 2:
+        sort(grupe.begin(), grupe.end(), [](const Studentas &a, const Studentas &b)
+             { return a.pavarde < b.pavarde; });
+        break;
+    case 3:
+        sort(grupe.begin(), grupe.end(), [](const Studentas &a, const Studentas &b)
+             { return a.vid > b.vid; });
+        break;
+    case 4:
+        sort(grupe.begin(), grupe.end(), [](const Studentas &a, const Studentas &b)
+             { return a.med > b.med; });
+        break;
+    default:
+        break;
     }
 }

@@ -30,3 +30,7 @@
 *.exe
 *.out
 *.app
+
+
+# big files
+*.studentai1000000.txt
