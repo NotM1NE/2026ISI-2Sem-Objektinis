@@ -6,6 +6,7 @@
 #include <limits>
 #include <fstream>
 #include <sstream>
+#include <chrono>
 
 using std::cin;
 using std::cout;
@@ -30,6 +31,28 @@ const vector<string> vardai = {"Jonas", "Mantas", "Tomas", "Lukas", "Karolis", "
 const vector<string> vyr_pavardes = {"Kazlauskas", "Jankauskas", "Petrauskas", "Stankevicius", "Zukauskas", "Butkus", "Pocius", "Urbonas", "Mockus", "Savickas"};
 
 const vector<string> mot_pavardes = {"Kazlauskiene", "Jankauskiene", "Petrauskiene", "Stankeviciene", "Zukauskiene", "Butkienė", "Pociene", "Urboniene", "Mockiene", "Savickiene"};
+
+class Timer
+{
+    // usage of using
+    using hrClock = std::chrono::high_resolution_clock;
+    /// using std::chrono::high_resolution_clock;
+    using durationDouble = std::chrono::duration<double>;
+
+private:
+    std::chrono::time_point<hrClock> start;
+
+public:
+    Timer() : start{hrClock::now()} {}
+    void reset()
+    {
+        start = hrClock::now();
+    }
+    double elapsed() const
+    {
+        return durationDouble(hrClock::now() - start).count();
+    }
+};
 
 struct Studentas
 {
@@ -210,6 +233,7 @@ void inputas(vector<Studentas> &grupe)
             ifstream duomenys("kursiokai.txt");
             if (duomenys.is_open())
             {
+                Timer timer;
                 getline(duomenys, temp);
                 while (!duomenys.eof())
                 {
@@ -230,7 +254,8 @@ void inputas(vector<Studentas> &grupe)
                     grupe.push_back(A);
                     A.paz.clear();
                 }
-                cout << "Duomenis buvo nuskaityti sekmingai" << endl;
+                auto time = timer.elapsed();
+                cout << "Duomenis buvo nuskaityti per "<< fixed << setprecision(6) << time << endl;
             }
             else
             {
