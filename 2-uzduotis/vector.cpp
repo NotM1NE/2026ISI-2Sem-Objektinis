@@ -351,7 +351,7 @@ void fileRead(vector<Studentas> &grupe, string file_name)
     }
     else
     {
-        cout << "Klaida atidarnat faila" << endl;
+        cout << "Klaida atidarant faila" << endl;
         return;
     }
 }
