@@ -5,13 +5,14 @@
 #include <algorithm>
 #include <limits>
 #include <fstream>
+#include <sstream>
 
 using std::cin;
 using std::cout;
 using std::endl;
 using std::fixed;
-using std::ifstream;
 using std::getline;
+using std::ifstream;
 using std::left;
 using std::numeric_limits;
 using std::ofstream;
@@ -21,6 +22,7 @@ using std::setw;
 using std::sort;
 using std::streamsize;
 using std::string;
+using std::stringstream;
 using std::vector;
 
 const vector<string> vardai = {"Jonas", "Mantas", "Tomas", "Lukas", "Karolis", "Darius", "Paulius", "Mindaugas", "Justas", "Rokas", "Agne", "Ieva", "Egle", "Gabija", "Monika", "Karolina", "Viktorija", "Emilija", "Justina", "Greta"};
@@ -204,14 +206,35 @@ void inputas(vector<Studentas> &grupe)
         if (t == 4)
         {
             string temp;
+            int balas, sum = 0;
             ifstream duomenys("kursiokai.txt");
             if (duomenys.is_open())
             {
+                getline(duomenys, temp);
                 while (!duomenys.eof())
                 {
+                    duomenys >> A.vardas >> A.pavarde;
                     getline(duomenys, temp);
-                    cout << temp;
+                    stringstream x(temp);
+                    while (x >> balas)
+                    {
+                        if (x.eof())
+                            A.egz = balas;
+                        else
+                        {
+                            A.paz.push_back(balas);
+                            sum += balas;
+                        }
+                    }
+                    MedVidSkaciavimas(A, sum);
+                    grupe.push_back(A);
+                    A.paz.clear();
                 }
+                cout << "Duomenis buvo nuskaityti sekmingai" << endl;
+            }
+            else
+            {
+                cout << "Klaida atidarnat faila" << endl;
             }
             duomenys.close();
         }
