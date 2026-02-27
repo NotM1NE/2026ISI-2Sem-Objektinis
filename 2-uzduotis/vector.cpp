@@ -67,7 +67,7 @@ void outputas(vector<Studentas> grupe);
 void MedVidSkaciavimas(Studentas &A, int sum);
 void randomVardasPavarde(string &vardas, string &pavarde);
 void fileRead(vector<Studentas> &grupe, string file_name);
-void fileTest(vector<Studentas> &grupe, string file_name);
+void fileTest(vector<Studentas> &grupe, string file_name, int &testKiekis);
 void sortByUser(vector<Studentas> &grupe, int temp);
 
 void intInput(int &temp);
@@ -232,6 +232,7 @@ void inputas(vector<Studentas> &grupe)
         }
         if (t == 4)
         {
+            int testKiekis = 5; //default
             double time = 0;
             cout << "Pasirinkite norima duomenu faila" << endl;
             cout << "1 - kursiokai.txt\n2 - studentai10000.txt\n3 - studentai100000.txt\n4 - studentai1000000.txt\n";
@@ -240,21 +241,21 @@ void inputas(vector<Studentas> &grupe)
             switch (t)
             {
             case 1:
-                fileTest(grupe, "kursiokai.txt");
+                fileTest(grupe, "kursiokai.txt", testKiekis);
                 break;
             case 2:
-                fileTest(grupe, "studentai10000.txt");
+                fileTest(grupe, "studentai10000.txt", testKiekis);
                 break;
             case 3:
-                fileTest(grupe, "studentai100000.txt");
+                fileTest(grupe, "studentai100000.txt", testKiekis);
                 break;
             case 4:
-                fileTest(grupe, "studentai1000000.txt");
+                fileTest(grupe, "studentai1000000.txt", testKiekis);
                 break;
             default:
                 break;
             }
-            time = timer.elapsed() / 5;
+            time = timer.elapsed() / testKiekis;
             cout << "Vidutinis failo nuskaitymo laikas: " << fixed << setprecision(6) << time << " sekundes." << endl;
         }
         if (t == 5)
@@ -307,11 +308,13 @@ void intInput(int &temp)
     }
 }
 
-void fileTest(vector<Studentas> &grupe, string file_name)
+void fileTest(vector<Studentas> &grupe, string file_name, int &testKiekis)
 {
+    cout << "Kiek kartu norite patestuoti faila: " << endl;
+    cin >> testKiekis;
     vector<Studentas> temp_grupe; // testinimui sukuriame laikina vektoriu, kad nebutu itakos originaliam grupe vektoriui, nes fileRead funkcija modifikuoja perduodama vektoriu
     fileRead(grupe, file_name);
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < testKiekis - 1; i++)
     {
         fileRead(temp_grupe, file_name);
         temp_grupe.clear();
