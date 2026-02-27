@@ -84,7 +84,7 @@ void outputas(vector<Studentas> grupe)
 {
     int temp;
     cout << "Pasirinkite norima buda isvesti duomenis" << endl;
-    cout << "1 - generuoti tik Vidurki\n2 - generuoti tik Mediana\n3 - generuoti ir Vidurki ir Mediana\n";
+    cout << "1 - isvesti tik Vidurki\n2 - isvesti tik Mediana\n3 - isvesti ir Vidurki ir Mediana\n";
     intInput(temp);
     sortByUser(grupe, temp);
     cout << left << setw(10) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
@@ -310,7 +310,7 @@ void intInput(int &temp)
 
 void fileTest(vector<Studentas> &grupe, string file_name, int &testKiekis)
 {
-    cout << "Kiek kartu norite patestuoti faila: " << endl;
+    cout << "Kiek kartu norite patestuoti faila: ";
     cin >> testKiekis;
     vector<Studentas> temp_grupe; // testinimui sukuriame laikina vektoriu, kad nebutu itakos originaliam grupe vektoriui, nes fileRead funkcija modifikuoja perduodama vektoriu
     fileRead(grupe, file_name);
