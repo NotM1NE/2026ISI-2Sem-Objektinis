@@ -86,10 +86,11 @@ int main()
 void outputas(vector<Studentas> grupe)
 {
     int temp, t;
-    cout << "Pasirinkite norima buda isvesti duomenis" << endl;
+    cout << "Pasirinkite norimu formatu isvesti duomenis" << endl;
     cout << "1 - isvesti tik Vidurki\n2 - isvesti tik Mediana\n3 - isvesti ir Vidurki ir Mediana\n";
     intInput(temp);
     sortByUser(grupe, temp);
+    cout << "Pasirinkite norima buda isvesti duomenis" << endl;
     cout << "1 - isvesti i konsole\n2 - isvesti i faila\n";
     intInput(t);
     switch (t)
@@ -471,4 +472,5 @@ void duomenuIrasymasKonsole(vector<Studentas> &grupe, int temp)
         for (auto A : grupe)
             cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
     }
+
 }
