@@ -70,6 +70,9 @@ void fileRead(vector<Studentas> &grupe, string file_name);
 void fileTest(vector<Studentas> &grupe, string file_name, int &testKiekis);
 void sortByUser(vector<Studentas> &grupe, int temp);
 
+void duomenuIrasymasFaile(vector<Studentas> &grupe, int temp, string fileName);
+void duomenuIrasymasKonsole(vector<Studentas> &grupe, int temp);
+
 void intInput(int &temp);
 
 int main()
@@ -82,32 +85,23 @@ int main()
 
 void outputas(vector<Studentas> grupe)
 {
-    int temp;
+    int temp, t;
     cout << "Pasirinkite norima buda isvesti duomenis" << endl;
     cout << "1 - isvesti tik Vidurki\n2 - isvesti tik Mediana\n3 - isvesti ir Vidurki ir Mediana\n";
     intInput(temp);
     sortByUser(grupe, temp);
-    cout << left << setw(15) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
-    if (temp == 1)
+    cout << "1 - isvesti i konsole\n2 - isvesti i faila\n";
+    intInput(t);
+    switch (t)
     {
-        cout << right << setw(20) << "Galutinis (Vid.)" << endl;
-        cout << left << setw(10) << "--------------------------------------------------------" << endl;
-        for (auto A : grupe)
-            cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << endl;
-    }
-    if (temp == 2)
-    {
-        cout << right << setw(20) << "Galutinis (Med.)" << endl;
-        cout << left << setw(10) << "---------------------------------------------------------" << endl;
-        for (auto A : grupe)
-            cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.med << endl;
-    }
-    if (temp == 3)
-    {
-        cout << right << setw(20) << "Galutinis (Vid.)" << right << setw(20) << "Galutinis (Med.)" << endl;
-        cout << left << setw(10) << "---------------------------------------------------------------------------" << endl;
-        for (auto A : grupe)
-            cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
+    case 1:
+        duomenuIrasymasKonsole(grupe, temp);
+        break;
+    case 2:
+        duomenuIrasymasFaile(grupe, temp, "Rezultatai.txt");
+        break;
+    default:
+        break;
     }
 }
 
@@ -232,7 +226,7 @@ void inputas(vector<Studentas> &grupe)
         }
         if (t == 4)
         {
-            int testKiekis = 5; //default
+            int testKiekis = 5; // default
             double time = 0;
             cout << "Pasirinkite norima duomenu faila" << endl;
             cout << "1 - kursiokai.txt\n2 - studentai10000.txt\n3 - studentai100000.txt\n4 - studentai1000000.txt\n";
@@ -419,5 +413,62 @@ void sortByUser(vector<Studentas> &grupe, int temp)
         break;
     default:
         break;
+    }
+}
+
+void duomenuIrasymasFaile(vector<Studentas> &grupe, int temp, string fileName)
+{
+    ofstream rezultatai(fileName);
+    if (rezultatai.is_open())
+    {
+        rezultatai << left << setw(15) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
+        if (temp == 1)
+        {
+            rezultatai << right << setw(20) << "Galutinis (Vid.)" << endl;
+            rezultatai << left << setw(10) << "--------------------------------------------------------" << endl;
+            for (auto A : grupe)
+                rezultatai << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << endl;
+        }
+        if (temp == 2)
+        {
+            rezultatai << right << setw(20) << "Galutinis (Med.)" << endl;
+            rezultatai << left << setw(10) << "---------------------------------------------------------" << endl;
+            for (auto A : grupe)
+                rezultatai << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.med << endl;
+        }
+        if (temp == 3)
+        {
+            rezultatai << right << setw(20) << "Galutinis (Vid.)" << right << setw(20) << "Galutinis (Med.)" << endl;
+            rezultatai << left << setw(10) << "---------------------------------------------------------------------------" << endl;
+            for (auto A : grupe)
+                rezultatai << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
+        }
+    }
+    rezultatai.close();
+}
+
+void duomenuIrasymasKonsole(vector<Studentas> &grupe, int temp)
+{
+    cout << left << setw(15) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
+    if (temp == 1)
+    {
+        cout << right << setw(20) << "Galutinis (Vid.)" << endl;
+        cout << left << setw(10) << "--------------------------------------------------------" << endl;
+        for (auto A : grupe)
+            cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << endl;
+    }
+    if (temp == 2)
+    {
+        cout << right << setw(20) << "Galutinis (Med.)" << endl;
+        cout << left << setw(10) << "---------------------------------------------------------" << endl;
+        for (auto A : grupe)
+            cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.med << endl;
+    }
+    if (temp == 3)
+    {
+        cout << right << setw(20) << "Galutinis (Vid.)" << right << setw(20) << "Galutinis (Med.)" << endl;
+        cout << left << setw(10) << "---------------------------------------------------------------------------" << endl;
+        for (auto A : grupe)
+            cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
     }
 }
