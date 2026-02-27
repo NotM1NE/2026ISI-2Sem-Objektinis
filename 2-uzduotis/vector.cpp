@@ -87,27 +87,27 @@ void outputas(vector<Studentas> grupe)
     cout << "1 - isvesti tik Vidurki\n2 - isvesti tik Mediana\n3 - isvesti ir Vidurki ir Mediana\n";
     intInput(temp);
     sortByUser(grupe, temp);
-    cout << left << setw(10) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
+    cout << left << setw(15) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
     if (temp == 1)
     {
         cout << right << setw(20) << "Galutinis (Vid.)" << endl;
         cout << left << setw(10) << "--------------------------------------------------------" << endl;
         for (auto A : grupe)
-            cout << left << setw(10) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << endl;
+            cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << endl;
     }
     if (temp == 2)
     {
         cout << right << setw(20) << "Galutinis (Med.)" << endl;
         cout << left << setw(10) << "---------------------------------------------------------" << endl;
         for (auto A : grupe)
-            cout << left << setw(10) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.med << endl;
+            cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.med << endl;
     }
     if (temp == 3)
     {
         cout << right << setw(20) << "Galutinis (Vid.)" << right << setw(20) << "Galutinis (Med.)" << endl;
-        cout << left << setw(10) << "----------------------------------------------------------------------" << endl;
+        cout << left << setw(10) << "---------------------------------------------------------------------------" << endl;
         for (auto A : grupe)
-            cout << left << setw(10) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
+            cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
     }
 }
 
@@ -378,7 +378,7 @@ void sortByUser(vector<Studentas> &grupe, int temp)
         }
         if (temp == 2)
         {
-            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Vid.)\n";
+            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Med.)\n";
             intInput(t);
             if (t == 4)
             {
