@@ -201,6 +201,7 @@ void inputas(vector<Studentas> &grupe)
             catch (const std::exception &e)
             {
                 std::cerr << e.what() << '\n';
+                continue;
             }
 
             time = timer.elapsed() / testKiekis;
@@ -232,7 +233,7 @@ void fileRead(vector<Studentas> &grupe, string file_name)
     ifstream duomenys(file_name);
     if (!duomenys.is_open())
     {
-        throw std::runtime_error("Nepavyko atidaryti failo: " + file_name);
+        throw std::runtime_error("Klaida: failas nerastas arba nepavyko atidaryti " + file_name);
     }
     getline(duomenys, temp); // skip header
     while (!duomenys.eof())
