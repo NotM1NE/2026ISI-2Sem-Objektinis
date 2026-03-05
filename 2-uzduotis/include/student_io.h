@@ -1,5 +1,5 @@
-#ifndef IO_H
-#define IO_H
+#ifndef STUDENT_IO_H
+#define STUDENT_IO_H
 
 #include "student.h"
 #include <string>
