@@ -1,0 +1,12 @@
+#include "io.h"
+#include <vector>
+
+int main()
+{
+    std::vector<Studentas> grupe;
+
+    inputas(grupe);
+    outputas(grupe);
+
+    return 0;
+}
