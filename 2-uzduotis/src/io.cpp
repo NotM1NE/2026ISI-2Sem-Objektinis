@@ -244,7 +244,11 @@ void fileRead(vector<Studentas> &grupe, string file_name)
         int sum = 0;
         while (x >> balas)
         {
-            if (x.eof())
+            if (balas < 1 || balas > 10)
+            {
+                throw std::out_of_range("Klaida: netinkamas egzamino pazymys faile " + file_name + ". Pazymys turi buti tarp 1 ir 10.");
+            }
+            if (x.peek() == EOF)
                 A.egz = balas;
             else
             {
