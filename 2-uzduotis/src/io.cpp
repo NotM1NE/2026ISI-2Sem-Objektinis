@@ -239,15 +239,15 @@ void fileRead(vector<Studentas> &grupe, string file_name)
     while (!duomenys.eof())
     {
         duomenys >> A.vardas >> A.pavarde;
+        if(A.vardas.empty() || A.pavarde.empty())
+            throw std::invalid_argument("Faile nera vardo arba pavardes");
         getline(duomenys, temp);
         stringstream x(temp);
         int sum = 0;
         while (x >> balas)
         {
             if (balas < 1 || balas > 10)
-            {
                 throw std::out_of_range("Klaida: netinkamas egzamino pazymys faile " + file_name + ". Pazymys turi buti tarp 1 ir 10.");
-            }
             if (x.peek() == EOF)
                 A.egz = balas;
             else

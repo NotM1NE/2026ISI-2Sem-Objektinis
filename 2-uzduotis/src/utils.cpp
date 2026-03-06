@@ -27,7 +27,6 @@ void intInput(int &temp)
             if (!(cin >> temp))
             {
                 throw std::invalid_argument("Netinkamas ivestis. Bandykite dar karta.");
-                
             }
             return;
         }
