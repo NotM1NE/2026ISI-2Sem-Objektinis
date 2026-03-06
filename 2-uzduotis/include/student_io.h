@@ -19,4 +19,6 @@ void sortByUser(vector<Studentas> &grupe, int temp);
 void duomenuIrasymasFaile(vector<Studentas> &grupe, int temp, string fileName);
 void duomenuIrasymasKonsole(vector<Studentas> &grupe, int temp);
 
+bool containsDigit(const string &str);
+
 #endif

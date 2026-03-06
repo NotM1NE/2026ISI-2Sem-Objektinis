@@ -239,7 +239,10 @@ void fileRead(vector<Studentas> &grupe, string file_name)
     while (!duomenys.eof())
     {
         duomenys >> A.vardas >> A.pavarde;
-        if(A.vardas.empty() || A.pavarde.empty())
+        A.vardas.erase(std::remove_if(A.vardas.begin(), A.vardas.end(), ::isspace), A.vardas.end());
+        A.pavarde.erase(std::remove_if(A.pavarde.begin(), A.pavarde.end(), ::isspace), A.pavarde.end());
+
+        if(A.vardas.empty() || A.pavarde.empty() || containsDigit(A.vardas) || containsDigit(A.pavarde))
             throw std::invalid_argument("Faile nera vardo arba pavardes");
         getline(duomenys, temp);
         stringstream x(temp);
@@ -380,4 +383,16 @@ void duomenuIrasymasKonsole(vector<Studentas> &grupe, int temp)
         for (auto A : grupe)
             cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
     }
+}
+
+bool containsDigit(const string &str)
+{
+    if(str.empty())
+        return false;
+    for (char c : str)
+    {
+        if(!std::isdigit(c))
+            return false;
+    }
+    return true;
 }
