@@ -535,7 +535,7 @@ void benchmarkFile(int n, int testKiekis)
         totalTotal += totalTimer.elapsed();
     }
 
-    cout << "\n==============================" << endl;
+    cout << "\n-------------------------------" << endl;
     cout << "Failas: " << fileName << endl;
     cout << "Testu kiekis: " << testKiekis << endl;
     cout << "Vidutinis generavimo laikas: " << fixed << setprecision(6) << generationTotal / testKiekis << " s" << endl;
@@ -543,5 +543,5 @@ void benchmarkFile(int n, int testKiekis)
     cout << "Vidutinis skirstymo laikas: " << fixed << setprecision(6) << splitTotal / testKiekis << " s" << endl;
     cout << "Vidutinis isvedimo laikas: " << fixed << setprecision(6) << writeTotal / testKiekis << " s" << endl;
     cout << "Vidutinis bendras laikas: " << fixed << setprecision(6) << totalTotal / testKiekis << " s" << endl;
-    cout << "==============================\n" << endl;
+    cout << "-------------------------------\n" << endl;
 }
