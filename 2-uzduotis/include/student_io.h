@@ -24,6 +24,7 @@ void GenerateStudentsFile(int n);
 void splitStudents(const vector<Studentas> &grupe, vector<Studentas> &failed, vector<Studentas> &passed);
 int getSortChoice(int temp);
 
-void benchmarkFile(int n, int testKiekis);
+void benchmarkProcessingFile(int n, int testKiekis);
+double benchmarkGenerateFile(int n, int testKiekis);
 
 #endif

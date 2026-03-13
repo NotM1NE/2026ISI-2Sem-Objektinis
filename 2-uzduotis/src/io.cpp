@@ -50,6 +50,7 @@ void outputas(vector<Studentas> grupe)
     {
         vector<Studentas> failed, passed;
         splitStudents(grupe, failed, passed);
+        grupe.clear();
 
         sortByUser(failed, sortChoice);
         sortByUser(passed, sortChoice);
@@ -263,9 +264,9 @@ void inputas(vector<Studentas> &grupe)
             cout << "Pasirinkite kiek kartu norite paleisti testa" << endl;
             intInput(t);
             for (int n = 1000; n <= 10000000; n *= 10)
-                benchmarkFile(n, t);
+                benchmarkProcessingFile(n, t);
         }
-        if(t == 7)
+        if (t == 7)
             break;
     }
 }
@@ -324,7 +325,6 @@ void fileRead(vector<Studentas> &grupe, string file_name)
             A.paz.push_back(paz);
             sum += paz;
         }
-
 
         MedVidSkaciavimas(A, sum);
         grupe.push_back(A);
@@ -499,7 +499,20 @@ void splitStudents(const vector<Studentas> &grupe, vector<Studentas> &failed, ve
             passed.push_back(A);
     }
 }
-void benchmarkFile(int n, int testKiekis)
+double benchmarkGenerateFile(int n, int testKiekis)
+{
+    double generationTotal = 0.0;
+    string fileName = "studentaiGen" + std::to_string(n) + ".txt";
+    for (int i = 0; i < testKiekis; i++)
+    {
+        Timer generationTimer;
+        GenerateStudentsFile(n);
+        generationTotal += generationTimer.elapsed();
+    }
+    return generationTotal;
+}
+
+void benchmarkProcessingFile(int n, int testKiekis)
 {
     double generationTotal = 0.0;
     double readTotal = 0.0;
@@ -512,19 +525,20 @@ void benchmarkFile(int n, int testKiekis)
         vector<Studentas> grupe;
         vector<Studentas> failed;
         vector<Studentas> passed;
-
         Timer totalTimer;
-
-        Timer generationTimer;
-        GenerateStudentsFile(n);
-        generationTotal += generationTimer.elapsed();
-
+        if(fopen(fileName.c_str(), "r") == nullptr)
+        {
+            cout << "Failas " << fileName << " nerastas. Generuojame faila..." << endl;
+            generationTotal = benchmarkGenerateFile(n, testKiekis);
+        }
+            
         Timer readTimer;
         fileRead(grupe, fileName);
         readTotal += readTimer.elapsed();
 
         Timer splitTimer;
         splitStudents(grupe, failed, passed);
+        grupe.clear();
         splitTotal += splitTimer.elapsed();
 
         Timer writeTimer;
@@ -543,5 +557,6 @@ void benchmarkFile(int n, int testKiekis)
     cout << "Vidutinis skirstymo laikas: " << fixed << setprecision(6) << splitTotal / testKiekis << " s" << endl;
     cout << "Vidutinis isvedimo laikas: " << fixed << setprecision(6) << writeTotal / testKiekis << " s" << endl;
     cout << "Vidutinis bendras laikas: " << fixed << setprecision(6) << totalTotal / testKiekis << " s" << endl;
-    cout << "-------------------------------\n" << endl;
+    cout << "-------------------------------\n"
+         << endl;
 }
