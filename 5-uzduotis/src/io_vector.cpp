@@ -1,12 +1,16 @@
-#include <string>
-#include <vector>
+#include "student_io_vector.h"
+#include "utils.h"
+#include "timer.h"
+
 #include <iostream>
 #include <iomanip>
 #include <algorithm>
 #include <limits>
 #include <fstream>
 #include <sstream>
-#include <chrono>
+#include <stdexcept>
+#include <ctime>
+#include <stdlib.h>
 
 using std::cin;
 using std::cout;
@@ -26,86 +30,41 @@ using std::string;
 using std::stringstream;
 using std::vector;
 
-const vector<string> vardai = {"Jonas", "Mantas", "Tomas", "Lukas", "Karolis", "Darius", "Paulius", "Mindaugas", "Justas", "Rokas", "Agne", "Ieva", "Egle", "Gabija", "Monika", "Karolina", "Viktorija", "Emilija", "Justina", "Greta"};
-
-const vector<string> vyr_pavardes = {"Kazlauskas", "Jankauskas", "Petrauskas", "Stankevicius", "Zukauskas", "Butkus", "Pocius", "Urbonas", "Mockus", "Savickas"};
-
-const vector<string> mot_pavardes = {"Kazlauskiene", "Jankauskiene", "Petrauskiene", "Stankeviciene", "Zukauskiene", "Butkiene", "Pociene", "Urboniene", "Mockiene", "Savickiene"};
-
-class Timer
-{
-    // usage of using
-    using hrClock = std::chrono::high_resolution_clock;
-    /// using std::chrono::high_resolution_clock;
-    using durationDouble = std::chrono::duration<double>;
-
-private:
-    std::chrono::time_point<hrClock> start;
-
-public:
-    Timer() : start{hrClock::now()} {}
-    void reset()
-    {
-        start = hrClock::now();
-    }
-    double elapsed() const
-    {
-        return durationDouble(hrClock::now() - start).count();
-    }
-};
-
-struct Studentas
-{
-    string vardas = "A", pavarde = "BB";
-    vector<int> paz;
-    int egz;
-    double vid, med;
-};
-
-void inputas(vector<Studentas> &grupe);
-void outputas(vector<Studentas> grupe);
-void MedVidSkaciavimas(Studentas &A, int sum);
-void randomVardasPavarde(string &vardas, string &pavarde);
-void fileRead(vector<Studentas> &grupe, string file_name);
-void fileTest(vector<Studentas> &grupe, string file_name, int &testKiekis);
-void sortByUser(vector<Studentas> &grupe, int temp);
-
-void duomenuIrasymasFaile(vector<Studentas> &grupe, int temp, string fileName);
-void duomenuIrasymasKonsole(vector<Studentas> &grupe, int temp);
-
-void intInput(int &temp);
-
-int main()
-{
-    vector<Studentas> grupe;
-    inputas(grupe);
-    outputas(grupe);
-    return 0;
-}
-
 void outputas(vector<Studentas> grupe)
 {
     int temp, t;
     cout << "Pasirinkite norimu formatu isvesti duomenis" << endl;
     cout << "1 - isvesti tik Vidurki\n2 - isvesti tik Mediana\n3 - isvesti ir Vidurki ir Mediana\n";
     intInput(temp);
-    sortByUser(grupe, temp);
+    int sortChoice = getSortChoice(temp);
+    sortByUser(grupe, sortChoice);
     cout << "Pasirinkite norima buda isvesti duomenis" << endl;
     cout << "1 - isvesti i konsole\n2 - isvesti i faila\n";
     intInput(t);
     switch (t)
     {
     case 1:
-        duomenuIrasymasKonsole(grupe, temp);
+        duomenuIrasymasKonsole(grupe, sortChoice);
         break;
     case 2:
-        duomenuIrasymasFaile(grupe, temp, "Rezultatai.txt");
+    {
+        vector<Studentas> failed, passed;
+        SplitStudentsStrategy1(grupe, failed, passed);
+        grupe.clear();
+
+        sortByUser(failed, sortChoice);
+        sortByUser(passed, sortChoice);
+
+        duomenuIrasymasFaile(failed, sortChoice, "failed.txt");
+        duomenuIrasymasFaile(passed, sortChoice, "passed.txt");
+
+        cout << "Studentai isskirti i dvi grupes ir isvesti i failus." << endl;
         break;
+    }
     default:
         break;
     }
 }
-
 void inputas(vector<Studentas> &grupe)
 {
     srand(time(NULL));
@@ -115,7 +74,7 @@ void inputas(vector<Studentas> &grupe)
     {
         int t = 0;
         cout << "Pasirinkite norima buda ivesti duomenis" << endl;
-        cout << "1 - ranka\n2 - generuoti tik pazymius\n3 - generuoti studentu vardus, pavardes ir pazymius\n4 - nuskaityti is failo\n5 - baigti darba\n";
+        cout << "1 - ranka\n2 - generuoti tik pazymius\n3 - generuoti studentu vardus, pavardes ir pazymius\n4 - nuskaityti is failo\n5 - generuoti studentu sarasa\n6 - paleisti testa\n7 - baigti darba\n";
         intInput(t);
         if (t == 1)
         {
@@ -233,73 +192,86 @@ void inputas(vector<Studentas> &grupe)
             cout << "1 - kursiokai.txt\n2 - studentai10000.txt\n3 - studentai100000.txt\n4 - studentai1000000.txt\n";
             intInput(t);
             Timer timer;
-            switch (t)
+            try
             {
-            case 1:
-                fileTest(grupe, "kursiokai.txt", testKiekis);
-                break;
-            case 2:
-                fileTest(grupe, "studentai10000.txt", testKiekis);
-                break;
-            case 3:
-                fileTest(grupe, "studentai100000.txt", testKiekis);
-                break;
-            case 4:
-                fileTest(grupe, "studentai1000000.txt", testKiekis);
-                break;
-            default:
-                break;
+                switch (t)
+                {
+                case 1:
+                    fileTest(grupe, "kursiokai.txt", testKiekis);
+                    break;
+                case 2:
+                    fileTest(grupe, "studentai10000.txt", testKiekis);
+                    break;
+                case 3:
+                    fileTest(grupe, "studentai100000.txt", testKiekis);
+                    break;
+                case 4:
+                    fileTest(grupe, "studentai1000000.txt", testKiekis);
+                    break;
+                default:
+                    break;
+                }
             }
+            catch (const std::exception &e)
+            {
+                std::cerr << e.what() << '\n';
+                continue;
+            }
+
             time = timer.elapsed() / testKiekis;
             cout << "Vidutinis failo nuskaitymo laikas: " << fixed << setprecision(6) << time << " sekundes." << endl;
         }
         if (t == 5)
+        {
+            double time = 0;
+            cout << "Pasirinkite norima dydzio faila" << endl;
+            cout << "1 - studentaiGen1000.txt\n2 - studentaiGen10000.txt\n3 - studentaiGen100000.txt\n4 - studentaiGen1000000.txt\n5 - studentaiGen10000000.txt\n";
+            intInput(t);
+            Timer timer;
+            try
+            {
+                switch (t)
+                {
+                case 1:
+                    GenerateStudentsFile(1000);
+                    break;
+                case 2:
+                    GenerateStudentsFile(10000);
+                    break;
+                case 3:
+                    GenerateStudentsFile(100000);
+                    break;
+                case 4:
+                    GenerateStudentsFile(1000000);
+                    break;
+                case 5:
+                    GenerateStudentsFile(10000000);
+                    break;
+                default:
+                    break;
+                }
+            }
+            catch (const std::exception &e)
+            {
+                std::cerr << e.what() << '\n';
+                continue;
+            }
+            time = timer.elapsed();
+            cout << "Vidutinis failo nuskaitymo laikas: " << fixed << setprecision(6) << time << " sekundes." << endl;
+        }
+        if (t == 6)
+        {
+            cout << "Pasirinkite kiek kartu norite paleisti testa" << endl;
+            intInput(t);
+            cout << "Pasirinkite strategija studentu isskyrimui:" << endl;
+            cout << "1 - Strategija 1\n2 - Strategija 2\n3 - Strategija 3" << endl;
+            int strategy;
+            intInput(strategy);
+            for (int n = 1000; n <= 10000000; n *= 10)
+                benchmarkProcessingFile(n, t, strategy);
+        }
+        if (t == 7)
             break;
-    }
-}
-
-void MedVidSkaciavimas(Studentas &A, int sum)
-{
-    int length = A.paz.size();
-    if (length == 0)
-    {
-        A.med = A.egz * 0.6;
-        A.vid = A.med;
-        return;
-    }
-    sort(A.paz.begin(), A.paz.end());
-    if (length % 2 == 0)
-        A.med = (A.paz[length / 2 - 1] + A.paz[length / 2]) / 2.0 * 0.4 + A.egz * 0.6;
-    else
-        A.med = A.paz[length / 2] * 0.4 + A.egz * 0.6;
-    A.vid = sum * 1.0 / (length * 1.0) * 0.4 + A.egz * 0.6;
-}
-
-void randomVardasPavarde(string &vardas, string &pavarde)
-{
-    vardas = vardai[rand() % vardai.size()];
-    if (vardas.back() == 's')
-        pavarde = vyr_pavardes[rand() % vyr_pavardes.size()];
-    else
-        pavarde = mot_pavardes[rand() % mot_pavardes.size()];
-}
-
-void intInput(int &temp)
-{
-    int input;
-    while (true)
-    {
-        if (cin >> input)
-        {
-            temp = input;
-            return;
-        }
-        else
-        {
-            cout << "Netinkamas ivestis. Bandykite dar karta." << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // atminties isvalymas
-        }
     }
 }
 
@@ -322,79 +294,51 @@ void fileRead(vector<Studentas> &grupe, string file_name)
     string temp;
     int balas;
     ifstream duomenys(file_name);
-    if (duomenys.is_open())
+    if (!duomenys.is_open())
     {
-        getline(duomenys, temp); // skip header
-        while (!duomenys.eof())
+        throw std::runtime_error("Klaida: failas nerastas arba nepavyko atidaryti " + file_name);
+    }
+    getline(duomenys, temp); // skip header
+    while (duomenys >> A.vardas >> A.pavarde)
+    {
+        A.paz.clear();
+        A.vardas.erase(std::remove_if(A.vardas.begin(), A.vardas.end(), ::isspace), A.vardas.end());
+        A.pavarde.erase(std::remove_if(A.pavarde.begin(), A.pavarde.end(), ::isspace), A.pavarde.end());
+
+        if (A.vardas.empty() || A.pavarde.empty())
+            throw std::invalid_argument("Faile nera vardo arba pavardes");
+        getline(duomenys, temp);
+        stringstream x(temp);
+
+        vector<int> pazymiai;
+        int sum = 0;
+
+        while (x >> balas)
         {
-            duomenys >> A.vardas >> A.pavarde;
-            getline(duomenys, temp);
-            stringstream x(temp);
-            int sum = 0;
-            while (x >> balas)
-            {
-                if (x.eof())
-                    A.egz = balas;
-                else
-                {
-                    A.paz.push_back(balas);
-                    sum += balas;
-                }
-            }
-            MedVidSkaciavimas(A, sum);
-            grupe.push_back(A);
-            A.paz.clear();
+            if (balas < 1 || balas > 10)
+                throw std::out_of_range("Klaida: netinkamas egzamino pazymys faile " + file_name + ". Pazymys turi buti tarp 1 ir 10.");
+            pazymiai.push_back(balas);
         }
-        duomenys.close();
+        if (pazymiai.empty())
+            throw std::invalid_argument("Faile nera pazymiu");
+
+        A.egz = pazymiai.back();
+        pazymiai.pop_back();
+        for (int paz : pazymiai)
+        {
+            A.paz.push_back(paz);
+            sum += paz;
+        }
+
+        MedVidSkaciavimas(A, sum);
+        grupe.push_back(A);
     }
-    else
-    {
-        cout << "Klaida atidarant faila" << endl;
-        return;
-    }
+    duomenys.close();
 }
 
 void sortByUser(vector<Studentas> &grupe, int temp)
 {
-    int t;
-    cout << "Pasirinkite pagal ka rikiuoti studentus" << endl;
-    while (true)
-    {
-        if (temp == 1)
-        {
-            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Vid.)\n";
-            intInput(t);
-            if (t == 4)
-            {
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                continue;
-            }
-            break;
-        }
-        if (temp == 2)
-        {
-            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Med.)\n";
-            intInput(t);
-            if (t == 4)
-            {
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
-                continue;
-            }
-            if (t == 3)
-            {
-                t = 4;
-                break;
-            }
-            break;
-        }
-        if (temp == 3)
-        {
-            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Vid.)\n4 - pagal galutini (Med.)\n";
-            intInput(t);
-            break;
-        }
-    }
-    switch (t)
+    switch (temp)
     {
     case 1:
         sort(grupe.begin(), grupe.end(), [](const Studentas &a, const Studentas &b)
@@ -414,6 +358,41 @@ void sortByUser(vector<Studentas> &grupe, int temp)
         break;
     default:
         break;
+    }
+}
+
+int getSortChoice(int temp)
+{
+    int t;
+    cout << "Pasirinkite pagal ka rikiuoti studentus" << endl;
+
+    while (true)
+    {
+        if (temp == 1)
+        {
+            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Vid.)\n";
+            intInput(t);
+            if (t >= 1 && t <= 3)
+                return t;
+        }
+        else if (temp == 2)
+        {
+            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Med.)\n";
+            intInput(t);
+            if (t == 1 || t == 2)
+                return t;
+            if (t == 3)
+                return 4; // kad naudotu mediana sortinimui
+        }
+        else if (temp == 3)
+        {
+            cout << "1 - pagal varda\n2 - pagal pavarde\n3 - pagal galutini (Vid.)\n4 - pagal galutini (Med.)\n";
+            intInput(t);
+            if (t >= 1 && t <= 4)
+                return t;
+        }
+
+        cout << "Neteisingas pasirinkimas. Bandykite dar karta.\n";
     }
 }
 
@@ -472,5 +451,150 @@ void duomenuIrasymasKonsole(vector<Studentas> &grupe, int temp)
         for (auto A : grupe)
             cout << left << setw(15) << A.vardas << left << setw(20) << A.pavarde << right << setw(20) << fixed << setprecision(2) << A.vid << right << setw(20) << A.med << endl;
     }
+}
 
+bool containsDigit(const string &str)
+{
+    if (str.empty())
+        return false;
+    for (char c : str)
+    {
+        if (!std::isdigit(c))
+            return false;
+    }
+    return true;
+}
+
+void GenerateStudentsFile(int n)
+{
+    srand(time(NULL));
+    int ndRand = rand() % 16 + 5;
+    ofstream rez("studentaiGen" + std::to_string(n) + ".txt");
+    rez << left << setw(25) << "Vardas" << setw(25) << "Pavarde";
+    for (int i = 1; i <= ndRand; i++)
+        rez << setw(10) << ("ND" + std::to_string(i));
+
+    rez << setw(10) << "Egz." << endl;
+
+    for (int i = 1; i <= n; i++)
+    {
+        rez << left << setw(25) << ("Vardas" + std::to_string(i)) << setw(25) << ("Pavarde" + std::to_string(i));
+        for (int j = 0; j < ndRand; j++)
+        {
+            int pazRand = rand() % 10 + 1;
+            rez << setw(10) << pazRand;
+        }
+        int egzRand = rand() % 10 + 1;
+        rez << setw(10) << egzRand << endl;
+    }
+    rez.close();
+}
+
+void SplitStudentsStrategy1(const vector<Studentas> &grupe, vector<Studentas> &failed, vector<Studentas> &passed)
+{
+    passed.clear();
+    failed.clear();
+
+    for (const auto &A : grupe)
+    {
+        if (A.vid < 5.0)
+            failed.push_back(A);
+        else
+            passed.push_back(A);
+    }
+}
+void SplitStudentsStrategy2(vector<Studentas> &grupe, vector<Studentas> &failed)
+{
+    failed.clear();
+    vector<Studentas> passed;
+
+    for (const auto &A : grupe)
+    {
+        if (A.vid < 5.0)
+            failed.push_back(A);
+        else
+            passed.push_back(A);
+    }
+    grupe = passed;
+}
+void SplitStudentsStrategy3(vector<Studentas> &grupe, vector<Studentas> &failed)
+{
+    failed.clear();
+    auto it = std::stable_partition(grupe.begin(), grupe.end(),
+                                    [](const Studentas &A)
+                                    {
+                                        return A.vid >= 5.0;
+                                    });
+
+    for (auto iter = it; iter != grupe.end(); ++iter)
+        failed.push_back(*iter);
+
+    grupe.erase(it, grupe.end());
+}
+double benchmarkGenerateFile(int n, int testKiekis)
+{
+    double generationTotal = 0.0;
+    string fileName = "studentaiGen" + std::to_string(n) + ".txt";
+    for (int i = 0; i < testKiekis; i++)
+    {
+        Timer generationTimer;
+        GenerateStudentsFile(n);
+        generationTotal += generationTimer.elapsed();
+    }
+    return generationTotal;
+}
+
+void benchmarkProcessingFile(int n, int testKiekis, int strategy)
+{
+    double generationTotal = 0.0;
+    double readTotal = 0.0;
+    double splitTotal = 0.0;
+    double writeTotal = 0.0;
+    double totalTotal = 0.0;
+    string fileName = "studentaiGen" + std::to_string(n) + ".txt";
+
+    for (int i = 0; i < testKiekis; i++)
+    {
+        vector<Studentas> grupe;
+        vector<Studentas> failed;
+        vector<Studentas> passed;
+        Timer totalTimer;
+        if (fopen(fileName.c_str(), "r") == nullptr)
+        {
+            cout << "Failas " << fileName << " nerastas. Generuojame faila..." << endl;
+            generationTotal = benchmarkGenerateFile(n, testKiekis);
+        }
+
+        Timer readTimer;
+        fileRead(grupe, fileName);
+        readTotal += readTimer.elapsed();
+
+        Timer splitTimer;
+        if (strategy == 1)
+            SplitStudentsStrategy1(grupe, failed, passed);
+        if (strategy == 2)
+            SplitStudentsStrategy2(grupe, failed);
+        if (strategy == 3)
+            SplitStudentsStrategy3(grupe, failed);
+        grupe.clear();
+        splitTotal += splitTimer.elapsed();
+
+        Timer writeTimer;
+        duomenuIrasymasFaile(failed, 3, "failed_" + fileName);
+        duomenuIrasymasFaile(passed, 3, "passed_" + fileName);
+        writeTotal += writeTimer.elapsed();
+
+        totalTotal += totalTimer.elapsed();
+    }
+
+    cout << "\n-------------------------------" << endl;
+    cout << "Failas: " << fileName << endl;
+    cout << "Testu kiekis: " << testKiekis << endl;
+    cout << "Vidutinis generavimo laikas: " << fixed << setprecision(6) << generationTotal / testKiekis << " s" << endl;
+    cout << "Vidutinis nuskaitymo laikas: " << fixed << setprecision(6) << readTotal / testKiekis << " s" << endl;
+    cout << "Vidutinis skirstymo laikas: " << fixed << setprecision(6) << splitTotal / testKiekis << " s" << endl;
+    cout << "Vidutinis isvedimo laikas: " << fixed << setprecision(6) << writeTotal / testKiekis << " s" << endl;
+    cout << "Vidutinis bendras laikas: " << fixed << setprecision(6) << totalTotal / testKiekis << " s" << endl;
+    cout << "-------------------------------\n"
+         << endl;
 }

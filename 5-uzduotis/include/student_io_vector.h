@@ -1,5 +1,5 @@
-#ifndef STUDENT_IO_H
-#define STUDENT_IO_H
+#ifndef STUDENT_IO_H_VECTOR
+#define STUDENT_IO_H_VECTOR
 
 #include "student.h"
 #include <string>
@@ -7,6 +7,7 @@
 
 using std::vector;
 using std::string;
+
 
 void inputas(vector<Studentas> &grupe);
 void outputas(vector<Studentas> grupe);
@@ -21,10 +22,14 @@ void duomenuIrasymasKonsole(vector<Studentas> &grupe, int temp);
 
 bool containsDigit(const string &str);
 void GenerateStudentsFile(int n);
-void splitStudents(const vector<Studentas> &grupe, vector<Studentas> &failed, vector<Studentas> &passed);
+
+void SplitStudentsStrategy1(const vector<Studentas> &grupe, vector<Studentas> &failed, vector<Studentas> &passed);
+void SplitStudentsStrategy2(vector<Studentas> &grupe, vector<Studentas> &failed);
+void SplitStudentsStrategy3(vector<Studentas> &grupe, vector<Studentas> &failed);
+
 int getSortChoice(int temp);
 
-void benchmarkProcessingFile(int n, int testKiekis);
+void benchmarkProcessingFile(int n, int testKiekis, int strategy);
 double benchmarkGenerateFile(int n, int testKiekis);
 
 #endif

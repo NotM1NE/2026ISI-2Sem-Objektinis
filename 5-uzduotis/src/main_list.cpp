@@ -1,9 +1,9 @@
-#include "student_io.h"
+#include "student_io_list.h"
 #include <vector>
 
 int main()
 {
-    std::vector<Studentas> grupe;
+    std::list<Studentas> grupe;
 
     inputas(grupe);
     outputas(grupe);

@@ -1,4 +1,4 @@
-#include "student_io.h"
+#include "student_io_deque.h"
 #include "utils.h"
 #include "timer.h"
 
@@ -28,9 +28,8 @@ using std::sort;
 using std::streamsize;
 using std::string;
 using std::stringstream;
-using std::vector;
 
-void outputas(vector<Studentas> grupe)
+void outputas(deque<Studentas> grupe)
 {
     int temp, t;
     cout << "Pasirinkite norimu formatu isvesti duomenis" << endl;
@@ -48,8 +47,8 @@ void outputas(vector<Studentas> grupe)
         break;
     case 2:
     {
-        vector<Studentas> failed, passed;
-        splitStudents(grupe, failed, passed);
+        deque<Studentas> failed, passed;
+        SplitStudentsStrategy1(grupe, failed, passed);
         grupe.clear();
 
         sortByUser(failed, sortChoice);
@@ -65,7 +64,7 @@ void outputas(vector<Studentas> grupe)
         break;
     }
 }
-void inputas(vector<Studentas> &grupe)
+void inputas(deque<Studentas> &grupe)
 {
     srand(time(NULL));
     Studentas A;
@@ -262,20 +261,24 @@ void inputas(vector<Studentas> &grupe)
         if (t == 6)
         {
             cout << "Pasirinkite kiek kartu norite paleisti testa" << endl;
+            cout << "Pasirinkite strategija studentu isskyrimui:" << endl;
+            cout << "1 - Strategija 1\n2 - Strategija 2\n3 - Strategija 3" << endl;
+            int strategy;
+            intInput(strategy);
             intInput(t);
             for (int n = 1000; n <= 10000000; n *= 10)
-                benchmarkProcessingFile(n, t);
+                benchmarkProcessingFile(n, t, strategy);
         }
         if (t == 7)
             break;
     }
 }
 
-void fileTest(vector<Studentas> &grupe, string file_name, int &testKiekis)
+void fileTest(deque<Studentas> &grupe, string file_name, int &testKiekis)
 {
     cout << "Kiek kartu norite patestuoti faila: ";
     cin >> testKiekis;
-    vector<Studentas> temp_grupe; // testinimui sukuriame laikina vektoriu, kad nebutu itakos originaliam grupe vektoriui, nes fileRead funkcija modifikuoja perduodama vektoriu
+    deque<Studentas> temp_grupe; // testinimui sukuriame laikina vektoriu, kad nebutu itakos originaliam grupe vektoriui, nes fileRead funkcija modifikuoja perduodama vektoriu
     fileRead(grupe, file_name);
     for (int i = 0; i < testKiekis - 1; i++)
     {
@@ -284,7 +287,7 @@ void fileTest(vector<Studentas> &grupe, string file_name, int &testKiekis)
     }
 }
 
-void fileRead(vector<Studentas> &grupe, string file_name)
+void fileRead(deque<Studentas> &grupe, string file_name)
 {
     Studentas A;
     string temp;
@@ -306,7 +309,7 @@ void fileRead(vector<Studentas> &grupe, string file_name)
         getline(duomenys, temp);
         stringstream x(temp);
 
-        vector<int> pazymiai;
+        deque<int> pazymiai;
         int sum = 0;
 
         while (x >> balas)
@@ -332,7 +335,7 @@ void fileRead(vector<Studentas> &grupe, string file_name)
     duomenys.close();
 }
 
-void sortByUser(vector<Studentas> &grupe, int temp)
+void sortByUser(deque<Studentas> &grupe, int temp)
 {
     switch (temp)
     {
@@ -392,7 +395,7 @@ int getSortChoice(int temp)
     }
 }
 
-void duomenuIrasymasFaile(vector<Studentas> &grupe, int temp, string fileName)
+void duomenuIrasymasFaile(deque<Studentas> &grupe, int temp, string fileName)
 {
     ofstream rezultatai(fileName);
     if (rezultatai.is_open())
@@ -423,7 +426,7 @@ void duomenuIrasymasFaile(vector<Studentas> &grupe, int temp, string fileName)
     rezultatai.close();
 }
 
-void duomenuIrasymasKonsole(vector<Studentas> &grupe, int temp)
+void duomenuIrasymasKonsole(deque<Studentas> &grupe, int temp)
 {
     cout << left << setw(15) << "Vardas" << left << setw(20) << "Pavarde" << right << setw(20);
     if (temp == 1)
@@ -486,7 +489,7 @@ void GenerateStudentsFile(int n)
     rez.close();
 }
 
-void splitStudents(const vector<Studentas> &grupe, vector<Studentas> &failed, vector<Studentas> &passed)
+void SplitStudentsStrategy1(const deque<Studentas> &grupe, deque<Studentas> &failed, deque<Studentas> &passed)
 {
     passed.clear();
     failed.clear();
@@ -498,6 +501,34 @@ void splitStudents(const vector<Studentas> &grupe, vector<Studentas> &failed, ve
         else
             passed.push_back(A);
     }
+}
+void SplitStudentsStrategy2(deque<Studentas> &grupe, deque<Studentas> &failed)
+{
+    failed.clear();
+    deque<Studentas> passed;
+
+    for (const auto &A : grupe)
+    {
+        if (A.vid < 5.0)
+            failed.push_back(A);
+        else
+            passed.push_back(A);
+    }
+    grupe = passed;
+}
+void SplitStudentsStrategy3(deque<Studentas> &grupe, deque<Studentas> &failed)
+{
+    failed.clear();
+    auto it = std::stable_partition(grupe.begin(), grupe.end(),
+                                    [](const Studentas &A)
+                                    {
+                                        return A.vid >= 5.0;
+                                    });
+
+    for (auto iter = it; iter != grupe.end(); ++iter)
+        failed.push_back(*iter);
+
+    grupe.erase(it, grupe.end());
 }
 double benchmarkGenerateFile(int n, int testKiekis)
 {
@@ -512,7 +543,7 @@ double benchmarkGenerateFile(int n, int testKiekis)
     return generationTotal;
 }
 
-void benchmarkProcessingFile(int n, int testKiekis)
+void benchmarkProcessingFile(int n, int testKiekis, int strategy)
 {
     double generationTotal = 0.0;
     double readTotal = 0.0;
@@ -522,22 +553,27 @@ void benchmarkProcessingFile(int n, int testKiekis)
     string fileName = "studentaiGen" + std::to_string(n) + ".txt";
     for (int i = 0; i < testKiekis; i++)
     {
-        vector<Studentas> grupe;
-        vector<Studentas> failed;
-        vector<Studentas> passed;
+        deque<Studentas> grupe;
+        deque<Studentas> failed;
+        deque<Studentas> passed;
         Timer totalTimer;
-        if(fopen(fileName.c_str(), "r") == nullptr)
+        if (fopen(fileName.c_str(), "r") == nullptr)
         {
             cout << "Failas " << fileName << " nerastas. Generuojame faila..." << endl;
             generationTotal = benchmarkGenerateFile(n, testKiekis);
         }
-            
+
         Timer readTimer;
         fileRead(grupe, fileName);
         readTotal += readTimer.elapsed();
 
         Timer splitTimer;
-        splitStudents(grupe, failed, passed);
+        if (strategy == 1)
+            SplitStudentsStrategy1(grupe, failed, passed);
+        if (strategy == 2)
+            SplitStudentsStrategy2(grupe, failed);
+        if (strategy == 3)
+            SplitStudentsStrategy3(grupe, failed);
         grupe.clear();
         splitTotal += splitTimer.elapsed();
 
