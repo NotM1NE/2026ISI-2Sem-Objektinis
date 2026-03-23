@@ -117,3 +117,8 @@ Net ir su **10 000 000 studentų įrašų** programa sėkmingai apdoroja duomeni
 <img width="665" height="688" alt="image" src="https://github.com/user-attachments/assets/4877781b-b3fc-442f-9f9f-6c54f1ba72d8" />
 
 ---
+
+# MakeFile
+
+Kad paleisti make vector_app list_app deque_app
+ir ./
