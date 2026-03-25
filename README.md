@@ -151,6 +151,7 @@
 ## Pastabos
 
 - Testai buvo vykdomi kompiuteryje su šiais parametrais:
+  
 | Komponentas | Specifikacija                                |
 | ----------- | -------------------------------------------- |
 | CPU         | AMD Ryzen 9 9900X (12 branduolių, 4.40 GHz) |
