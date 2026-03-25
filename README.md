@@ -174,13 +174,17 @@
 
 ## Nuotraukos
 **vector_app**
+
 <img width="301" height="748" alt="Screenshot 2026-03-26 001148" src="https://github.com/user-attachments/assets/e6f4ad7b-4a9a-46a7-84c5-cfa3156f10d1" />
 <img width="306" height="740" alt="Screenshot 2026-03-26 001859" src="https://github.com/user-attachments/assets/9026e942-d30b-4aa4-8b20-ac8dcf862252" />
 <img width="302" height="745" alt="Screenshot 2026-03-26 002624" src="https://github.com/user-attachments/assets/0a1070e0-22bf-4f8f-9b4f-9ddfbe6835c9" />
 
 **list_app**
+
 Pamirsau
+
 **deque_app**
+
 <img width="292" height="739" alt="Screenshot 2026-03-25 235058" src="https://github.com/user-attachments/assets/5c610194-d84c-4fb3-9d51-4b521d77013e" />
 <img width="295" height="741" alt="Screenshot 2026-03-25 235316" src="https://github.com/user-attachments/assets/c9cdaab4-677e-4175-8f95-eabea7313187" />
 <img width="297" height="740" alt="Screenshot 2026-03-26 000123" src="https://github.com/user-attachments/assets/4ed6e2ba-3672-4a79-a7bf-55349dce8f7b" />
