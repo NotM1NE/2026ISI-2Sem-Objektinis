@@ -531,18 +531,6 @@ void SplitStudentsStrategy3(vector<Studentas> &grupe, vector<Studentas> &failed)
 
     grupe.erase(it, grupe.end());
 }
-double benchmarkGenerateFile(int n, int testKiekis)
-{
-    double generationTotal = 0.0;
-    string fileName = "studentaiGen" + std::to_string(n) + ".txt";
-    for (int i = 0; i < testKiekis; i++)
-    {
-        Timer generationTimer;
-        GenerateStudentsFile(n);
-        generationTotal += generationTimer.elapsed();
-    }
-    return generationTotal;
-}
 
 void benchmarkProcessingFile(int n, int testKiekis, int strategy)
 {
@@ -551,6 +539,7 @@ void benchmarkProcessingFile(int n, int testKiekis, int strategy)
     double splitTotal = 0.0;
     double writeTotal = 0.0;
     double totalTotal = 0.0;
+
     string fileName = "studentaiGen" + std::to_string(n) + ".txt";
 
     for (int i = 0; i < testKiekis; i++)
@@ -558,27 +547,38 @@ void benchmarkProcessingFile(int n, int testKiekis, int strategy)
         vector<Studentas> grupe;
         vector<Studentas> failed;
         vector<Studentas> passed;
-        Timer totalTimer;
-        if (fopen(fileName.c_str(), "r") == nullptr)
-        {
-            cout << "Failas " << fileName << " nerastas. Generuojame faila..." << endl;
-            generationTotal = benchmarkGenerateFile(n, testKiekis);
-        }
 
+        Timer totalTimer;
+
+        // 1. Generavimas
+        Timer generationTimer;
+        GenerateStudentsFile(n);
+        generationTotal += generationTimer.elapsed();
+
+        // 2. Skaitymas
         Timer readTimer;
         fileRead(grupe, fileName);
         readTotal += readTimer.elapsed();
 
+        // 3. Skirstymas
         Timer splitTimer;
         if (strategy == 1)
+        {
             SplitStudentsStrategy1(grupe, failed, passed);
-        if (strategy == 2)
+        }
+        else if (strategy == 2)
+        {
             SplitStudentsStrategy2(grupe, failed);
-        if (strategy == 3)
+            passed = grupe;
+        }
+        else if (strategy == 3)
+        {
             SplitStudentsStrategy3(grupe, failed);
-        grupe.clear();
+            passed = grupe;
+        }
         splitTotal += splitTimer.elapsed();
 
+        // 4. Rasymas
         Timer writeTimer;
         duomenuIrasymasFaile(failed, 3, "failed_" + fileName);
         duomenuIrasymasFaile(passed, 3, "passed_" + fileName);
@@ -595,6 +595,5 @@ void benchmarkProcessingFile(int n, int testKiekis, int strategy)
     cout << "Vidutinis skirstymo laikas: " << fixed << setprecision(6) << splitTotal / testKiekis << " s" << endl;
     cout << "Vidutinis isvedimo laikas: " << fixed << setprecision(6) << writeTotal / testKiekis << " s" << endl;
     cout << "Vidutinis bendras laikas: " << fixed << setprecision(6) << totalTotal / testKiekis << " s" << endl;
-    cout << "-------------------------------\n"
-         << endl;
+    cout << "-------------------------------\n" << endl;
 }

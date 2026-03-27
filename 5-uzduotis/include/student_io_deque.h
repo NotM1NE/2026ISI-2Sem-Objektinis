@@ -28,6 +28,5 @@ void SplitStudentsStrategy3(deque<Studentas> &grupe, deque<Studentas> &failed);
 int getSortChoice(int temp);
 
 void benchmarkProcessingFile(int n, int testKiekis, int strategy);
-double benchmarkGenerateFile(int n, int testKiekis);
 
 #endif

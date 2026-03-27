@@ -30,6 +30,5 @@ void SplitStudentsStrategy3(vector<Studentas> &grupe, vector<Studentas> &failed)
 int getSortChoice(int temp);
 
 void benchmarkProcessingFile(int n, int testKiekis, int strategy);
-double benchmarkGenerateFile(int n, int testKiekis);
 
 #endif
