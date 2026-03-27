@@ -289,6 +289,7 @@ void fileTest(list<Studentas> &grupe, string file_name, int &testKiekis)
 
 void fileRead(list<Studentas> &grupe, string file_name)
 {
+    grupe.clear();
     Studentas A;
     string temp;
     int balas;

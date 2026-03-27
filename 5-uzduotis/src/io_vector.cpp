@@ -290,6 +290,7 @@ void fileTest(vector<Studentas> &grupe, string file_name, int &testKiekis)
 
 void fileRead(vector<Studentas> &grupe, string file_name)
 {
+    grupe.clear();
     Studentas A;
     string temp;
     int balas;
